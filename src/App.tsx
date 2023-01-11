@@ -1,24 +1,24 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-
+import React, { Suspense, useEffect, useState } from "react";
+import { useRoutes } from "react-router-dom";
+import "normalize.css";
+import routes from "./router/index";
+import { useSelector, shallowEqual, useDispatch } from "react-redux";
+import { useBearDispatch, useBearSelector } from "./store";
+import AppHeader from "./components/app-header";
+import AppPlayerBar from "./views/player/app-player-bar";
+import TopItem from "./components/top-item";
+import { fetchPlayerDataAction } from "./views/player/store";
 function App() {
+  const dispatch = useBearDispatch();
+  useEffect(() => {
+    dispatch(fetchPlayerDataAction(1975753397));
+  }, []);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <AppHeader />
+      <Suspense>{useRoutes(routes)}</Suspense>
+      <AppPlayerBar />
+      <TopItem />
     </div>
   );
 }

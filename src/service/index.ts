@@ -1,0 +1,8 @@
+import BearRequest from "./request";
+import { BASE_URL, TIME_OUT } from "./config";
+const mybearRequest = new BearRequest({
+  baseURL: BASE_URL,
+  timeout: TIME_OUT,
+});
+
+export default mybearRequest;
