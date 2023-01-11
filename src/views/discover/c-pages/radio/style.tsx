@@ -9,16 +9,21 @@ export const RadioWrapper = styled.div`
     border-right: 1px solid #d3d3d3;
     padding: 30px;
     > .content-top {
+      margin-top: 20px;
       position: relative;
       display: flex;
       height: 194px;
       align-items: center;
       .my-left {
-        left: -20px;
+        transform: translate(-50%);
+        left: -10px;
         background-position: 0 -30px;
       }
       .my-right {
-        right: -20px;
+        top: 50%;
+        transform: translate(-50%);
+
+        right: -40px;
         background-position: -30px -30px;
       }
       .carousel {
@@ -51,15 +56,33 @@ export const RadioWrapper = styled.div`
 export const RadioItemWrapper = styled.div<IRadioItem>`
   width: 70px;
   height: 70px;
+  cursor: pointer;
+  position: relative;
   margin: 0 0 25px 33px;
-  &:nth-child(9n+1){
+  text-align: center;
+  &:nth-child(9n + 1) {
     margin-left: 0;
   }
+  &:hover {
+    background-color: #f2f2f2;
+    border-radius: 5px;
+  }
   .item-img {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%);
     width: 48px;
     height: 48px;
-    background-image: url(${props=>props.imgUrl});
+    background-image: url(${(props) => props.imgUrl});
     background-position: 0 0;
+  }
+  .img-content {
+    width: 48px;
+    height: 48px;
+    overflow: hidden;
+  }
+  .item-name {
+    font-size: 12px;
   }
   .active {
     color: #d35757;

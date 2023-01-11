@@ -27,6 +27,9 @@ const DJRadio: React.FC<IProps> = () => {
       ref.current?.prev();
     }
   }
+  function handleClickTo(id: number) {
+    console.log(id);
+  }
   return (
     <RadioWrapper className="all-bg">
       <div className="wrap-v2 content">
@@ -46,8 +49,16 @@ const DJRadio: React.FC<IProps> = () => {
                       .slice(index * 18, (index + 1) * 18)
                       .map((element: any) => {
                         return (
-                          <RadioItemWrapper key={element.id} imgUrl={element.picWebUrl}>
-                            <div className="item-img"></div>
+                          <RadioItemWrapper
+                            key={element.id}
+                            imgUrl={element.picWebUrl}
+                            onClick={() => handleClickTo(element.id)}
+                          >
+                            <div className="img-content">
+                              <div className="item-img"></div>
+                            </div>
+
+                            <span className="item-name">{element.name}</span>
                           </RadioItemWrapper>
                         );
                       })}
