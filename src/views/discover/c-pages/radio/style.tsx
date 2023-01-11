@@ -82,10 +82,19 @@ export const RadioItemWrapper = styled.div<IRadioItem>`
     overflow: hidden;
   }
   .item-name {
+    position: relative;
+    top: -3px;
     font-size: 12px;
   }
-  .active {
+  &.active {
+    &:hover {
+        background-color: white;
+    }
     color: #d35757;
-    background-position: -48px 0;
+    background-image: url(https://s2.music.126.net/style/web2/img/index_radio/radio_bg.png?d1684ae560d1a237aa8b0b669e30a283);
+    background-position: -70px 0 !important;
+    .item-img {
+        background-position: -48px 0;
+    }
   }
 `;

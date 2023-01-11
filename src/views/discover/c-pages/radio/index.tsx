@@ -1,12 +1,12 @@
-import { useBearDispatch, useBearSelector } from "@/store";
 import { Carousel } from "antd";
-import React, { ReactNode, useEffect, useRef } from "react";
-import { memo } from "react";
-import { Outlet } from "react-router-dom";
+import React, { ReactNode, useEffect, useRef, memo, ElementRef } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
 import { getRadioDataAction } from "./store";
+import { useBearDispatch, useBearSelector } from "@/store";
 import { RadioWrapper } from "./style";
-import { ElementRef } from "react";
 import { RadioItemWrapper } from "./style";
+import classNames from "classnames";
+import { useQuery } from "@/utils/useQuery";
 interface IProps {
   children?: ReactNode;
 }
@@ -14,12 +14,15 @@ interface IProps {
 const DJRadio: React.FC<IProps> = () => {
   const dispatch = useBearDispatch();
   const ref = useRef<ElementRef<typeof Carousel>>(null);
+  const navigate = useNavigate();
+  const { id } = useQuery();
+  const currentID = id;
   const { catelist } = useBearSelector((state) => ({
     catelist: state.radio.catelist,
   }));
   useEffect(() => {
     dispatch(getRadioDataAction());
-  }, []);
+  }, [id]);
   function handleChange(isNext: boolean) {
     if (isNext) {
       ref.current?.next();
@@ -28,7 +31,8 @@ const DJRadio: React.FC<IProps> = () => {
     }
   }
   function handleClickTo(id: number) {
-    console.log(id);
+    const wantUrl = "/discover/djradio/category?id=" + id;
+    navigate(wantUrl);
   }
   return (
     <RadioWrapper className="all-bg">
@@ -53,6 +57,9 @@ const DJRadio: React.FC<IProps> = () => {
                             key={element.id}
                             imgUrl={element.picWebUrl}
                             onClick={() => handleClickTo(element.id)}
+                            className={classNames({
+                              active: currentID == element.id,
+                            })}
                           >
                             <div className="img-content">
                               <div className="item-img"></div>

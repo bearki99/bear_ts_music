@@ -10,6 +10,7 @@ export const getRadioDataAction = createAsyncThunk(
 );
 const initialState: any = {
   catelist: [],
+  currentListID: 0
 };
 const radioSlice = createSlice({
   name: "radio",
@@ -18,7 +19,11 @@ const radioSlice = createSlice({
     changecatelistAction(state, { payload }) {
       state.catelist = payload;
     },
+    changecurrentListID(state, {payload}){
+      state.currentListID = payload;
+    }
   },
 });
-export const { changecatelistAction } = radioSlice.actions;
+export const { changecatelistAction,
+  changecurrentListID } = radioSlice.actions;
 export default radioSlice.reducer;
