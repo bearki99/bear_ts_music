@@ -36,13 +36,13 @@ views - 页面文件夹
 
 与网易云音乐保持相同
 
-发现音乐-Discover
+发现音乐 - Discover
 
-我的音乐-Mine
+我的音乐 - Mine
 
-关注-Focus
+关注 - Focus
 
-下载客户端-Download
+下载客户端 - Download
 
 ![image-20230111095404909](C:\Users\beary\AppData\Roaming\Typora\typora-user-images\image-20230111095404909.png)
 
@@ -50,16 +50,16 @@ views - 页面文件夹
 
 发现音乐下二级路由：
 
-推荐	-Recommend
+推荐	- Recommend
 
-排行榜-Ranking
+排行榜 - Ranking
 
-歌单	-Songs
+歌单	- Songs
 
-主播电台-Radio
+主播电台- Radio
 
-歌手	-Singers
+歌手	- Singers
 
-新碟上架-Album
+新碟上架- Album
 
 ![image-20230111095546344](C:\Users\beary\AppData\Roaming\Typora\typora-user-images\image-20230111095546344.png)

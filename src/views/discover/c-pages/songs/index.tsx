@@ -17,16 +17,17 @@ interface IProps {
 
 const Songs: React.FC<IProps> = () => {
   const query = useQuery();
-  const { cat, limit, offset, order } = query;
+  const { cat='全部', limit=35, offset=0, order='hot' } = query;
   const dispatch = useBearDispatch();
   const navigate = useNavigate();
   const offSetPerPage = 35;
-  const { allNum, currentSongList, currentPage, isShow } = useBearSelector(
+  const { allNum, currentSongList, currentPage, isShow, nowCat } = useBearSelector(
     (state) => ({
       allNum: state.song.allNum,
       currentSongList: state.song.currentSongList,
       currentPage: state.song.currentPage,
       isShow: state.song.isShow,
+      nowCat: state.song.nowCat
     })
   );
   useEffect(() => {
@@ -35,8 +36,7 @@ const Songs: React.FC<IProps> = () => {
   useEffect(() => {
     dispatch(getSongListData({ offset, limit, cat, order }));
   }, [cat, limit, offset, order]);
-  function handleClick(page: number, pageSize: number) {
-    const nowCat = cat;
+  function handleClick(page: number) {
     dispatch(changeCurrentPageAction(page));
     navigate(
       `/discover/songs?order=hot&cat=${nowCat}&limit=35&offset=${

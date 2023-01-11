@@ -16,7 +16,6 @@ export const getStyleData = createAsyncThunk(
   "styleData",
   async (_, { dispatch }) => {
     getStyleAction().then((res) => {
-      dispatch(changeAllStyleAction(res.categories));
       const category = res.categories;
       const datas = res.sub;
       const ans = [];
@@ -24,6 +23,8 @@ export const getStyleData = createAsyncThunk(
         const res = datas.filter((item: any) => item.category == key);
         ans.push(res);
       }
+      const catFinal = Object.values(category);
+      dispatch(changeAllStyleAction(catFinal));
       dispatch(changestyleDatas(ans));
     });
   }
@@ -35,6 +36,7 @@ const initialState: any = {
   isShow: false,
   allStyle: [],
   styleDatas: [],
+  nowCat: '全部'
 };
 const songSlice = createSlice({
   name: "song",
@@ -58,6 +60,9 @@ const songSlice = createSlice({
     changestyleDatas(state, { payload }) {
       state.styleDatas = payload;
     },
+    changenowCat(state, {payload}){
+      state.nowCat = payload;
+    }
   },
 });
 export const {
@@ -67,5 +72,6 @@ export const {
   changeisShowAction,
   changeAllStyleAction,
   changestyleDatas,
+  changenowCat
 } = songSlice.actions;
 export default songSlice.reducer;
