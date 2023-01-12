@@ -1,8 +1,8 @@
 import { useBearDispatch, useBearSelector } from "@/store";
 import { Pagination } from "antd";
-import React, { ReactNode, useEffect } from "react";
+import React, { ReactNode, useEffect} from "react";
 import { memo } from "react";
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import SongHeader from "./song-header";
 import { getSongListData, getStyleData } from "./store";
 import { SongWrapper } from "./style";

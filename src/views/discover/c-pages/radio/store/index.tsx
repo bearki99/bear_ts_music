@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getCateList } from "../service";
+import { getCateList, getHotRadioData } from "../service";
 export const getRadioDataAction = createAsyncThunk(
   "radio",
   async (_, { dispatch }) => {
@@ -8,9 +8,19 @@ export const getRadioDataAction = createAsyncThunk(
     });
   }
 );
+export const getNowRadioDataAction = createAsyncThunk(
+  "nowRadio",
+  async (param: any, { dispatch }) => {
+    const {id, offset} = param;
+    getHotRadioData(id, offset).then(res => {
+      dispatch(changecurrentRadioData(res));
+    })
+  }
+);
 const initialState: any = {
   catelist: [],
-  currentListID: 0
+  currentListID: 0,
+  currentRadioData: [],
 };
 const radioSlice = createSlice({
   name: "radio",
@@ -19,11 +29,17 @@ const radioSlice = createSlice({
     changecatelistAction(state, { payload }) {
       state.catelist = payload;
     },
-    changecurrentListID(state, {payload}){
+    changecurrentListID(state, { payload }) {
       state.currentListID = payload;
-    }
+    },
+    changecurrentRadioData(state, { payload }) {
+      state.currentRadioData = payload;
+    },
   },
 });
-export const { changecatelistAction,
-  changecurrentListID } = radioSlice.actions;
+export const {
+  changecatelistAction,
+  changecurrentListID,
+  changecurrentRadioData,
+} = radioSlice.actions;
 export default radioSlice.reducer;

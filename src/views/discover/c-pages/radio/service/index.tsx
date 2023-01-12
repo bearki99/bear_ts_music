@@ -5,3 +5,13 @@ export const getCateList = () => {
         url: '/dj/catelist'
     })
 }
+export const getHotRadioData = (cateId:number, offset=0, limit=10) => {
+    return mybearRequest.get({
+        url:'/dj/radio/hot',
+        params: {
+            cateId,
+            offset,
+            limit
+        }
+    })
+}

@@ -1,12 +1,20 @@
 import { Carousel } from "antd";
-import React, { ReactNode, useEffect, useRef, memo, ElementRef } from "react";
+import React, {
+  ReactNode,
+  useEffect,
+  useRef,
+  memo,
+  ElementRef,
+  useState,
+} from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import { getRadioDataAction } from "./store";
+import { getNowRadioDataAction, getRadioDataAction } from "./store";
 import { useBearDispatch, useBearSelector } from "@/store";
 import { RadioWrapper } from "./style";
 import { RadioItemWrapper } from "./style";
 import classNames from "classnames";
 import { useQuery } from "@/utils/useQuery";
+import { randomUUID } from "crypto";
 interface IProps {
   children?: ReactNode;
 }
@@ -14,15 +22,27 @@ interface IProps {
 const DJRadio: React.FC<IProps> = () => {
   const dispatch = useBearDispatch();
   const ref = useRef<ElementRef<typeof Carousel>>(null);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { id } = useQuery();
+  const { id = 0, offset = 0 } = useQuery();
   const currentID = id;
   const { catelist } = useBearSelector((state) => ({
     catelist: state.radio.catelist,
   }));
   useEffect(() => {
     dispatch(getRadioDataAction());
-  }, [id]);
+  }, []);
+  useEffect(() => {
+    setLoading(true);
+    
+    dispatch(getNowRadioDataAction({ id, offset }));
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 400);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [id, offset]);
   function handleChange(isNext: boolean) {
     if (isNext) {
       ref.current?.next();
@@ -31,9 +51,10 @@ const DJRadio: React.FC<IProps> = () => {
     }
   }
   function handleClickTo(id: number) {
-    const wantUrl = "/discover/djradio/category?id=" + id;
+    const wantUrl = "/discover/djradio?id=" + id;
     navigate(wantUrl);
   }
+  if(loading) return null;
   return (
     <RadioWrapper className="all-bg">
       <div className="wrap-v2 content">
