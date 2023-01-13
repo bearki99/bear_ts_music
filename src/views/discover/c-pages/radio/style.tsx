@@ -7,7 +7,7 @@ export const RadioWrapper = styled.div`
     background-color: white;
     border-left: 1px solid #d3d3d3;
     border-right: 1px solid #d3d3d3;
-    padding: 30px;
+    padding: 30px 50px;
     > .content-top {
       margin-top: 20px;
       position: relative;
@@ -98,3 +98,9 @@ export const RadioItemWrapper = styled.div<IRadioItem>`
     }
   }
 `;
+export const RadioMainWrapper = styled.div`
+  >.first {
+    display: flex;
+    justify-content: space-between;
+  }
+`

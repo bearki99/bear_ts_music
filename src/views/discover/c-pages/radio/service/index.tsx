@@ -15,3 +15,8 @@ export const getHotRadioData = (cateId:number, offset=0, limit=10) => {
         }
     })
 }
+export const getRecommendDJ = () => {
+    return mybearRequest.get({
+        url: '/program/recommend'
+    })
+}
