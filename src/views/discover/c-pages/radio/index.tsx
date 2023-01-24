@@ -8,15 +8,12 @@ import React, {
   useState,
 } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import { getNowRadioDataAction, getRadioDataAction } from "./store";
+import { getRadioDataAction } from "./store";
 import { useBearDispatch, useBearSelector } from "@/store";
-import { RadioMainWrapper, RadioWrapper } from "./style";
+import { RadioWrapper } from "./style";
 import { RadioItemWrapper } from "./style";
 import classNames from "classnames";
 import { useQuery } from "@/utils/useQuery";
-import DJCHeader from "./c-cpns/dj-content-header";
-import DjContent from "./c-cpns/dj-content";
-import { getType } from "@reduxjs/toolkit";
 interface IProps {
   children?: ReactNode;
 }
@@ -28,13 +25,11 @@ const DJRadio: React.FC<IProps> = () => {
   const navigate = useNavigate();
   const { id = 0, offset = 0 } = useQuery();
   const currentID = id;
-  const { catelist, recommendData } = useBearSelector((state) => ({
+  const { catelist } = useBearSelector((state) => ({
     catelist: state.radio.catelist,
-    recommendData: state.radio.recommendData,
   }));
   useEffect(() => {
     dispatch(getRadioDataAction());
-    
   }, []);
   useEffect(() => {
     setLoading(true);
@@ -104,30 +99,6 @@ const DJRadio: React.FC<IProps> = () => {
             }}
           ></div>
         </div>
-        <RadioMainWrapper>
-          <div className="first">
-            <div className="left">
-              <DJCHeader
-                title="推荐节目"
-                url="/#/discover/djradio/recommend"
-                width={426}
-              />
-              <DjContent
-                width={426}
-                height={600}
-                infoData={recommendData}
-                type={0}
-              />
-            </div>
-            <div className="right">
-              <DJCHeader
-                title="节目排行榜"
-                url="/#/discover/djradio/rank"
-                width={426}
-              />
-            </div>
-          </div>
-        </RadioMainWrapper>
 
         <Outlet></Outlet>
       </div>

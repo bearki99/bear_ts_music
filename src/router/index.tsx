@@ -14,6 +14,9 @@ const Ranking = lazy(() => import("@/views/discover/c-pages/ranking"));
 const Category = lazy(
   () => import("@/views/discover/c-pages/radio/c-cpns/category")
 );
+const MainDJ = lazy(
+  () => import("@/views/discover/c-pages/radio/c-cpns/maindj")
+);
 const routes: RouteObject[] = [
   { path: "/", element: <Navigate to="/discover" /> },
   {
@@ -30,6 +33,7 @@ const routes: RouteObject[] = [
         path: "/discover/djradio",
         element: <DJRadio />,
         children: [
+          { path: "/discover/djradio", element: <MainDJ /> },
           { path: "/discover/djradio/category", element: <Category /> },
         ],
       },

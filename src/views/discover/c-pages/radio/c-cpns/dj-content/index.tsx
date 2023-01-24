@@ -21,7 +21,7 @@ const DJContent: React.FC<IProps> = (props) => {
           return type === 0 ? (
             <DjItemV1 key={item.id} index={index} infoData={item}/>
           ) : (
-            <DjItemV2 key={item.id} index={index} infoData={item}/>
+            <DjItemV2 key={item.score} index={index} infoData={item}/>
           );
         })}
     </DJContentWrapper>

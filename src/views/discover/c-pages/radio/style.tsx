@@ -98,9 +98,3 @@ export const RadioItemWrapper = styled.div<IRadioItem>`
     }
   }
 `;
-export const RadioMainWrapper = styled.div`
-  >.first {
-    display: flex;
-    justify-content: space-between;
-  }
-`
