@@ -6,6 +6,7 @@ import playerReducer from "@/views/player/store/index";
 import rankingReducer from "@/views/discover/c-pages/ranking/store/index";
 import songReducer from "@/views/discover/c-pages/songs/store/index";
 import radioReducer from "@/views/discover/c-pages/radio/store/index";
+import singerReducer from "@/views/discover/c-pages/singers/store/index";
 const store = configureStore({
   reducer: {
     counter: counterReducer,
@@ -14,6 +15,7 @@ const store = configureStore({
     ranking: rankingReducer,
     song: songReducer,
     radio: radioReducer,
+    singer: singerReducer
   },
 });
 type stateType = typeof store.getState;
