@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { memo, useEffect, useState, useRef } from "react";
+import { memo, useEffect} from "react";
 
 import { InSingerWrapper } from "./style";
 import { throttle } from "lodash";
@@ -10,7 +10,7 @@ import SingerHeader from "../singer-header";
 import { changeSingerCurrentPageAction, getSingerDataAction } from "../../store";
 import SingerItem from "../singer-item";
 import { isTouchBottom } from "@/utils/isTouchBottom";
-import { changeCurrentPageAction } from "../../../songs/store";
+import { IItem } from "../../interface";
 
 interface IProps {
   children?: ReactNode;
@@ -25,7 +25,6 @@ const InSinger: React.FC<IProps> = () => {
   }));
 
   const handleBack = () => {
-    console.log('back');
     dispatch(changeSingerCurrentPageAction(1));
   };
 
@@ -48,7 +47,7 @@ const InSinger: React.FC<IProps> = () => {
       <SingerHeader title="入驻歌手" url="" more={false} />
       <div className="content">
         {mainSinger &&
-          mainSinger.map((item: any) => {
+          mainSinger.map((item: IItem) => {
             return <SingerItem infoData={item} key={item.id} />;
           })}
       </div>

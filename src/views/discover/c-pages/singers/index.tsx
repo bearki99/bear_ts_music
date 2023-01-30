@@ -1,9 +1,14 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useState } from "react";
 import { memo } from "react";
+
 import { SingerWrapper } from "./style";
+
 import SingerData from "@/assets/data/singer-data.json";
 import headData from "@/assets/data/main-data.json";
+
 import { Outlet } from "react-router-dom";
+import classNames from "classnames";
+import { useQuery } from "@/utils/useQuery";
 interface IProps {
   children?: ReactNode;
 }
@@ -18,22 +23,26 @@ export interface Label {
   url: string;
 }
 
-export type Root = Root3[]
+export type Root = Root3[];
 
 export interface Root3 {
-  name: string
-  label: Label2[]
+  name: string;
+  label: Label2[];
 }
 
 export interface Label2 {
-  name: string
-  id: string
+  name: string;
+  id: string;
 }
 const Singers: React.FC<IProps> = () => {
+  const handleClick = () => {
+    window.scrollTo(0, 0);
+  };
+  const { id } = useQuery();
   return (
     <SingerWrapper className="bg-color">
       <div className="content wrap-v2 wrap-bg">
-        <div className="left">
+        <div className="left" onClick={handleClick}>
           {headData &&
             headData.map((item: Root2) => {
               return (
@@ -41,13 +50,29 @@ const Singers: React.FC<IProps> = () => {
                   <h2 className="item-title">{item.name}</h2>
                   <ul>
                     {item.label &&
-                      item.label.map((element: Label) => {
+                      item.label.map((element: Label, index: number) => {
                         return (
                           <li
                             key={element.id}
-                            className="item-list sprite-singer-bg"
+                            className={classNames(
+                              "item-list",
+                              "sprite-singer-bg",
+                              {
+                                "my-active":
+                                  (window.location.href.includes(element.url) &&
+                                    index !== 0) ||
+                                  (window.location.href[
+                                    window.location.href.length - 1
+                                  ] == "/" &&
+                                    index == 0),
+                              }
+                            )}
                           >
-                            <a href={"/#/discover/singers/" + element.url}>
+                            <a
+                              href={"/#/discover/singers/" + element.url}
+                              onClick={handleClick}
+                              className="item-list-a"
+                            >
                               {element.name}
                             </a>
                           </li>
@@ -68,10 +93,17 @@ const Singers: React.FC<IProps> = () => {
                         return (
                           <li
                             key={element.id}
-                            className="item-list sprite-singer-bg"
+                            className={classNames(
+                              "item-list",
+                              "sprite-singer-bg",
+                              {
+                                "my-active": element.id == id,
+                              }
+                            )}
                           >
                             <a
                               href={"/#/discover/singers/cat?id=" + element.id}
+                              className="item-list-a"
                             >
                               {element.name}
                             </a>

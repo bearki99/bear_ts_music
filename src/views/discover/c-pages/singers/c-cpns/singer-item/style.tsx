@@ -1,7 +1,9 @@
 import styled from "styled-components";
-
-export const SingerItemWrapper = styled.div`
-  margin: 15px 0;
+interface IProps {
+  showImg: boolean;
+}
+export const SingerItemWrapper = styled.div<IProps>`
+  margin: ${props => props.showImg ? 15 : 10}px 0;
   > .top {
     width: 130px;
     height: 130px;
