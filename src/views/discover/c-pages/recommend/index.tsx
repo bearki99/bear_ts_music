@@ -1,7 +1,4 @@
-import NavHeader from "@/components/nav-header";
-import NavHeaderV2 from "@/components/nav-header-v2";
-import mybearRequest from "@/service";
-import { useBearDispatch } from "@/store";
+import { useBearDispatch, useBearSelector } from "@/store";
 import React, { ReactNode, useEffect } from "react";
 import { memo } from "react";
 import ArriveSingers from "./c-cpns/arrive-singers";
@@ -10,6 +7,7 @@ import HotRecommend from "./c-cpns/hot-recommend";
 import NewAlbum from "./c-cpns/new-album";
 import TopRanking from "./c-cpns/top-ranking";
 import Topbanner from "./c-cpns/topbanner";
+import UserDetail from "./c-cpns/user-detail";
 import UserLogin from "./c-cpns/user-login";
 import { fetchRankingDataAction, fetchRecommendsAction } from "./store";
 import { RecommendWrapper } from "./style";
@@ -19,6 +17,10 @@ interface IProps {
 
 const Recommend: React.FC<IProps> = () => {
   const dispatch = useBearDispatch();
+  const {isLogin, currentID} = useBearSelector((state)=>({
+    isLogin: state.login.isLogin,
+    currentID: state.login.currentID
+  }))
   useEffect(() => {
     dispatch(fetchRecommendsAction());
     dispatch(fetchRankingDataAction());
@@ -34,7 +36,7 @@ const Recommend: React.FC<IProps> = () => {
           <TopRanking/>
         </div>
         <div className="right">
-          <UserLogin/>
+          {isLogin ? <UserDetail id={currentID}/>:<UserLogin/>}
           <div className="right-content">
             <ArriveSingers/>
             <HotDj/>

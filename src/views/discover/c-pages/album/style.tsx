@@ -1,5 +1,7 @@
 import styled from "styled-components";
 
-export const AlbumWrapper = styled.div`
-    
+export const MyAlbumWrapper = styled.div`
+    >.content {
+        background-color: white;
+    }
 `

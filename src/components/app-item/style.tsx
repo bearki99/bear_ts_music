@@ -55,9 +55,8 @@ export const AppItemWrapper = styled.div`
   }
   .bottom{
     overflow: hidden;
-    
     display: block;
-    height: 46px;
+    height: 44px;
     box-sizing: border-box;
     padding: 5px 0;
     font-size: 13px;
