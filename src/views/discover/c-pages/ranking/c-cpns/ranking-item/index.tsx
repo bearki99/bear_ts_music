@@ -1,12 +1,11 @@
 import { useBearDispatch, useBearSelector } from "@/store";
 import { transformUrl } from "@/utils/transformUrl";
 import classNames from "classnames";
-import React, { ReactNode, useEffect } from "react";
+import React, { ReactNode} from "react";
 import { memo } from "react";
 import { shallowEqual } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
-import { changeCurrentIndexAction, getCurrentRankingData } from "../../store";
+import { useNavigate } from "react-router-dom";
+import { changeCurrentIndexAction} from "../../store";
 import { NewRankingItemWrapper } from "./style";
 interface IProps {
   children?: ReactNode;
@@ -49,7 +48,7 @@ const RankingItem: React.FC<IProps> = (props) => {
                 }}
               >
                 <div className="left">
-                  <img src={transformUrl(item.coverImgUrl, 40)} alt="" />
+                  <img src={item.coverImgUrl && transformUrl(item.coverImgUrl, 40)} alt="" />
                 </div>
                 <div className="right">
                   <div className="name">{item.name}</div>

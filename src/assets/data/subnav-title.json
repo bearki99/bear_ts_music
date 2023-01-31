@@ -19,9 +19,5 @@
   {
     "path": "/#/discover/singers",
     "title": "歌手"
-  },
-  {
-    "path": "/#/discover/album",
-    "title": "新碟上架"
   }
 ]

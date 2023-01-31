@@ -1,5 +1,11 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getQRCodeKey, getQRImg } from "../service/index";
+import {
+  exitLoginAction,
+  getLoginData,
+  getLoginStatus,
+  getQRCodeKey,
+  getQRImg,
+} from "../service/index";
 
 export const getQRData = createAsyncThunk(
   "qr",
@@ -10,6 +16,24 @@ export const getQRData = createAsyncThunk(
   }
 );
 
+export const getMyLoginData = createAsyncThunk(
+  "loginD",
+  async (arg: any, { dispatch }) => {
+    const { id, cookie } = arg;
+    const res = await getLoginData(id);
+    const res2 = await getLoginStatus(cookie);
+    dispatch(changeinfoDataAction(res));
+    dispatch(changeloginDataAction(res2.profile));
+  }
+);
+
+export const exitLogin = createAsyncThunk("exit", async(_, {dispatch})=>{
+  const cookie = localStorage.getItem("cookie") as string;
+  await exitLoginAction(cookie);
+  localStorage.removeItem("cookie");
+  dispatch(changeisLogin(false));
+})
+
 const loginSlice = createSlice({
   name: "login",
   initialState: {
@@ -18,6 +42,7 @@ const loginSlice = createSlice({
     isLogin: false,
     currentID: 0,
     infoData: [],
+    loginData: [] as any,
   },
   reducers: {
     changemyKeyAction(state, { payload }) {
@@ -35,6 +60,9 @@ const loginSlice = createSlice({
     changeinfoDataAction(state, { payload }) {
       state.infoData = payload;
     },
+    changeloginDataAction(state, { payload }) {
+      state.loginData = payload;
+    },
   },
 });
 export const {
@@ -43,5 +71,6 @@ export const {
   changeisLogin,
   changemyID,
   changeinfoDataAction,
+  changeloginDataAction,
 } = loginSlice.actions;
 export default loginSlice.reducer;

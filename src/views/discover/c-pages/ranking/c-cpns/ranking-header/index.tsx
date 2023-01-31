@@ -19,7 +19,7 @@ const RankingHeader: React.FC<IProps> = (props) => {
   return (
     <RankingHeaderWrapper>
       <div className="left">
-        <img src={transformUrl(imgUrl, 150)} alt="" />
+        <img src={imgUrl && transformUrl(imgUrl, 150)} alt="" />
         <div className="mask sprite-cover"></div>
       </div>
       <div className="right">

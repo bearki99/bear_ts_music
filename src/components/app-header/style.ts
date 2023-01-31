@@ -111,7 +111,7 @@ export const HeaderRight = styled.div`
     font-size: 12px;
     margin-left: 15px;
     /* border: 1px solid gray; */
-    >span {
+    > span {
       padding: 5px 10px;
       border-radius: 15px;
       border: 1px solid gray;
@@ -121,5 +121,11 @@ export const HeaderRight = styled.div`
     margin-left: 15px;
     color: #cccccc;
     font-size: 12px;
+  }
+  .exit-btn {
+    margin-left: 15px;
+    color: #cccccc;
+    font-size: 12px;
+    background-color: transparent;
   }
 `;

@@ -1,11 +1,15 @@
 import React, { ReactNode, useState } from "react";
 import { memo } from "react";
-import { Link } from "react-router-dom";
 import { HeaderLeft, HeaderRight, HeaderWrapper } from "./style";
+
 import headerTitles from "@/assets/data/header-titles.json";
 import subnavTitles from "@/assets/data/subnav-title.json";
+
 import classNames from "classnames";
 import { Input } from "antd";
+import { useBearDispatch, useBearSelector } from "@/store";
+
+import { exitLogin } from "../login/store";
 interface IProps {
   children?: ReactNode;
 }
@@ -13,6 +17,10 @@ interface IProps {
 const AppHeader: React.FC<IProps> = () => {
   const [titleindex, setIndex] = useState(0);
   const [subnavIndex, setnavIndex] = useState(0);
+  const dispatch = useBearDispatch();
+  const { isLogin } = useBearSelector((state) => ({
+    isLogin: state.login.isLogin,
+  }));
   function showItem(item: any, index: number) {
     return (
       <a
@@ -31,6 +39,9 @@ const AppHeader: React.FC<IProps> = () => {
   function changeIndex(index: number) {
     setIndex(index);
   }
+  function handleExit() {
+    dispatch(exitLogin());
+  }
   return (
     <HeaderWrapper>
       <div className="content wrap-v1">
@@ -43,15 +54,21 @@ const AppHeader: React.FC<IProps> = () => {
           </div>
         </HeaderLeft>
         <HeaderRight>
-          <Input placeholder="音乐/视频/电台/用户"
-          className="input sprite-web-logo" />
+          <Input
+            placeholder="音乐/视频/电台/用户"
+            className="input sprite-web-logo"
+          />
           <div className="sprite-web-logo input-logo"></div>
           <div className="creator">
             <span>创作者中心</span>
           </div>
-          <div className="login">
-            登录
-          </div>
+          {isLogin ? (
+            <button className="exit-btn" onClick={handleExit}>
+              退出
+            </button>
+          ) : (
+            <div className="login">登录</div>
+          )}
         </HeaderRight>
       </div>
       {titleindex === 0 && (

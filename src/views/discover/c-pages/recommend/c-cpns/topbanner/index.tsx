@@ -63,7 +63,7 @@ const TopBanner: React.FC<IProps> = () => {
               banners.map((item: Ibanner) => {
                 return (
                   <img
-                    src={item.imageUrl}
+                    src={item && item.imageUrl}
                     key={item.imageUrl}
                     onClick={() => jumpUrl(item.url)}
                   />

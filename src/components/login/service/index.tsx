@@ -43,8 +43,27 @@ export const getMyLoginStatus = (cookie: string) => {
   });
 };
 
-export const getLoginData = (cookie: string) => {
+export const getLoginData = (uid: number) => {
   return mybearRequest.get({
-    
+    url: "/user/detail",
+    params: { uid },
+  });
+};
+
+export const getLoginStatus = (cookie: string) => {
+  return mybearRequest.get({
+    url: "/user/account",
+    params: {
+      cookie
+    }
+  });
+};
+
+export const exitLoginAction = (cookie: string) => {
+  return mybearRequest.post({
+    url: "/logout",
+    params: {
+      cookie
+    }
   })
 }

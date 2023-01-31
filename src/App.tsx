@@ -13,6 +13,8 @@ import TopItem from "./components/top-item";
 import { fetchPlayerDataAction } from "./views/player/store";
 import { getMyLoginStatus } from "./components/login/service";
 import { changeisLogin, changemyID } from "./components/login/store";
+
+import { getMyLoginData } from "./components/login/store";
 function App() {
   const dispatch = useBearDispatch();
   async function getStatus(cookie: string) {
@@ -25,8 +27,11 @@ function App() {
     getStatus(cookie).then((res) => {
       res && dispatch(changeisLogin(true));
       res && dispatch(changemyID(res));
+      const obj = {id: res, cookie};
+      res && dispatch(getMyLoginData(obj));
       !res && dispatch(changeisLogin(false));
     });
+    
     dispatch(fetchPlayerDataAction(1975753397));
   }, []);
   return (

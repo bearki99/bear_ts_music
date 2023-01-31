@@ -2,7 +2,6 @@ import { useBearDispatch, useBearSelector } from "@/store";
 import { getPlayUrl } from "@/utils/getplayUrl";
 import { transformTime } from "@/utils/transformTime";
 import { transformUrl } from "@/utils/transformUrl";
-import { current } from "@reduxjs/toolkit";
 import { Slider } from "antd";
 import classNames from "classnames";
 import React, {
@@ -12,11 +11,7 @@ import React, {
   useState,
   useCallback,
 } from "react";
-import {
-  changeCurrentSongIndexAction,
-  changeCurrentSongAction,
-  changeMusicAction,
-} from "../store";
+import { changePlaymodeAction, changeMusicAction } from "../store";
 import { memo } from "react";
 import { shallowEqual } from "react-redux";
 import {
@@ -32,13 +27,7 @@ interface IProps {
 const AppPlayerBar: React.FC<IProps> = () => {
   //获取Redux数据
   //currentSong-当前正在播放的歌曲，currentSongLyric-正在播放的歌曲的歌词
-  const {
-    currentSong,
-    currentSongLyric,
-    playMode,
-    songList,
-    currentSongIndex,
-  } = useBearSelector(
+  const { currentSong, currentSongLyric, playMode } = useBearSelector(
     (state) => ({
       currentSong: state.player.currentSong,
       currentSongLyric: state.player.currentSongLyric,
@@ -52,6 +41,7 @@ const AppPlayerBar: React.FC<IProps> = () => {
   //获取展示数据
   const name = currentSong && currentSong?.name;
   const imgUrl = currentSong && currentSong.al && currentSong.al.picUrl;
+  const wantUrl = imgUrl && transformUrl(imgUrl, 35, 35);
   let singer =
     currentSong &&
     currentSong.ar &&
@@ -79,9 +69,8 @@ const AppPlayerBar: React.FC<IProps> = () => {
           setPlaying(true);
           console.log("播放成功");
         })
-        .catch((err) => {
+        .catch(() => {
           setPlaying(false);
-          console.log("播放失败");
         });
     }
   }, [currentSong]);
@@ -91,7 +80,7 @@ const AppPlayerBar: React.FC<IProps> = () => {
     if (audioRef.current) {
       isplaying
         ? audioRef.current.pause()
-        : audioRef.current.play().catch((err: any) => {
+        : audioRef.current.play().catch(() => {
             setPlaying(false);
           });
     }
@@ -112,7 +101,6 @@ const AppPlayerBar: React.FC<IProps> = () => {
           if (currentSongLyric[mid].time >= x) r = mid;
           else l = mid + 1;
         }
-        // console.log(l);
         if (l - 1 === currentIndex) return;
         if (l - 1 !== 0) {
           setCurrentIndex(l - 1);
@@ -139,17 +127,23 @@ const AppPlayerBar: React.FC<IProps> = () => {
   };
 
   const handleTimeEnded = () => {
-    console.log('end');
+    console.log("end");
     switch (playMode) {
       case 2:
-        if(audioRef.current){
+        if (audioRef.current) {
           audioRef.current.currentTime = 0;
         }
-        
+
         break;
       default:
         dispatch(changeMusicAction(true));
     }
+  };
+
+  const handleClick = () => {
+    let mycurrent = playMode + 1;
+    if (mycurrent > 2) mycurrent = 0;
+    dispatch(changePlaymodeAction(mycurrent));
   };
   return (
     <PlayerBarWrapper className="sprite-player">
@@ -171,7 +165,7 @@ const AppPlayerBar: React.FC<IProps> = () => {
         </ControlBarWrapper>
         <ContentBarWrapper>
           <div className="left">
-            <img src={transformUrl(imgUrl, 35)} alt="" />
+            <img src={wantUrl} alt="" />
             <a href="#" className="mask sprite-btn3"></a>
           </div>
           <div className="right">
@@ -214,6 +208,7 @@ const AppPlayerBar: React.FC<IProps> = () => {
                 "random-mode": playMode === 1,
                 "single-mode": playMode === 2,
               })}
+              onClick={handleClick}
             ></button>
           </div>
         </ExtraWrapper>
