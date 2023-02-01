@@ -74,6 +74,8 @@ const AppHeader: React.FC<IProps> = () => {
       {titleindex === 0 && (
         <div className="first-nav">
           {subnavTitles.map((element, index) => {
+            const url = window.location.href.split("/").slice(3);
+            const currentUrl = '/' + url.join('/');
             return (
               <a
                 key={index}
@@ -85,7 +87,7 @@ const AppHeader: React.FC<IProps> = () => {
               >
                 <div
                   className={classNames({
-                    "nav-active": index === subnavIndex,
+                    "nav-active": currentUrl == element.path,
                   })}
                 >
                   {element.title}

@@ -33,7 +33,7 @@ export const HeaderWrapper = styled.div`
     }
   }
   .nav-item:first-child {
-    margin-left: 25%;
+    margin-left: 27.5%;
   }
   .nav-active {
     background-color: #9b0909;

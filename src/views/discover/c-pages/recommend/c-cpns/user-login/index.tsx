@@ -19,7 +19,7 @@ const Login: React.FC<IProps> = () => {
       <div className="sprite-bg btn" onClick={() => setShow(true)}>
         用户登录
       </div>
-      {show && <MyLogin show={show} handleHidden={handleHidden}/>}
+      {show && <MyLogin show={show} handleHidden={handleHidden} />}
     </LoginWrapper>
   );
 };

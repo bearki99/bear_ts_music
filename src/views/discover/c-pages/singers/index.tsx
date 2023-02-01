@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode } from "react";
 import { memo } from "react";
 
 import { SingerWrapper } from "./style";
@@ -19,7 +19,7 @@ export interface Root2 {
 
 export interface Label {
   name: string;
-  id: string;
+  id: number;
   url: string;
 }
 
@@ -39,6 +39,7 @@ const Singers: React.FC<IProps> = () => {
     window.scrollTo(0, 0);
   };
   const { id } = useQuery();
+  const ans = window.location.href.split('/').slice(5);
   return (
     <SingerWrapper className="bg-color">
       <div className="content wrap-v2 wrap-bg">
@@ -59,12 +60,7 @@ const Singers: React.FC<IProps> = () => {
                               "sprite-singer-bg",
                               {
                                 "my-active":
-                                  (window.location.href.includes(element.url) &&
-                                    index !== 0) ||
-                                  (window.location.href[
-                                    window.location.href.length - 1
-                                  ] == "/" &&
-                                    index == 0),
+                                ans.length == 1 || (ans.length == 2 && ans[1] == "") && index == 0 || ans.length == 2 && index == 1 && ans[1] == "signed",
                               }
                             )}
                           >

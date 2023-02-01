@@ -2,8 +2,8 @@
   {
     "name": "推荐",
     "label": [
-      { "name": "推荐歌手", "id": "0", "url": "" },
-      { "name": "入驻歌手", "id": "1", "url": "signed" }
+      { "name": "推荐歌手", "id": 0, "url": "" },
+      { "name": "入驻歌手", "id": 1, "url": "signed" }
     ]
   }
 ]

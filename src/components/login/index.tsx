@@ -5,6 +5,7 @@ import { MyLoginWrapper } from "./style";
 
 import { useBearDispatch, useBearSelector } from "@/store";
 import mybearRequest from "@/service";
+import { changeisLogin } from "./store";
 
 interface IProps {
   children?: ReactNode;
@@ -18,6 +19,7 @@ const MyLogin: React.FC<IProps> = (props) => {
     imgUrl: state.login.imgUrl,
   }));
   const withCredentials = true;
+  const dispatch = useBearDispatch();
   const [state, setState] = useState(0);
   const imgRef = useRef<HTMLImageElement>(null);
   async function checkStatus(key: number) {
@@ -69,17 +71,20 @@ const MyLogin: React.FC<IProps> = (props) => {
       const statusRes = await checkStatus(key);
       if (statusRes.code === 800) {
         clearInterval(timer);
+        dispatch(changeisLogin(false));
       }
       if (statusRes.code === 802) {
         console.log("待确认");
+        dispatch(changeisLogin(false));
       }
       if (statusRes.code === 803) {
         clearInterval(timer);
         console.log("授权登录成功");
+        dispatch(changeisLogin(true));
         const myres = await getLoginStatus(statusRes.cookie);
         localStorage.setItem("cookie", statusRes.cookie);
         setTimeout(() => {
-          window.location.href = "/#";
+          window.location.href = "/#/discover/recommend";
         }, 1000);
       }
     }, 3000);
