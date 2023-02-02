@@ -11,9 +11,7 @@ interface BearRequestConfig<T = AxiosResponse> extends AxiosRequestConfig {
   interceptors?: BearInterceptors<T>;
 }
 // 定义一个flag 判断是否刷新Token中
-let isRefreshing = false;
-// 保存需要重新发起请求的队列
-let retryRequests = [];
+
 class NewBearRequest {
   instance: AxiosInstance;
   constructor(config: BearRequestConfig) {
