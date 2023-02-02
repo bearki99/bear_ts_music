@@ -45,9 +45,28 @@ export const MyLoginWrapper = styled.div<IProps>`
         font-size: 18px;
         font-weight: 500;
       }
+      .imgs {
+        position: relative;
+        width: 146px;
+        height: 146px;
+      }
       img {
         width: 146px;
         height: 146px;
+      }
+      .notValid {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        top: 0;
+        left: 0;
+        width: 146px;
+        height: 146px;
+        background-color: rgba(255, 255, 255, .5);
+        button {
+          background-color: greenyellow;
+        }
       }
     }
   }

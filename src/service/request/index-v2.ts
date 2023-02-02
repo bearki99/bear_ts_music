@@ -10,17 +10,21 @@ interface BearInterceptors<T> {
 interface BearRequestConfig<T = AxiosResponse> extends AxiosRequestConfig {
   interceptors?: BearInterceptors<T>;
 }
-class BearRequest {
+// 定义一个flag 判断是否刷新Token中
+let isRefreshing = false;
+// 保存需要重新发起请求的队列
+let retryRequests = [];
+class NewBearRequest {
   instance: AxiosInstance;
   constructor(config: BearRequestConfig) {
     this.instance = axios.create(config);
     // 添加拦截器 第一项-成功的回调 第二项-失败的回调
     this.instance.interceptors.request.use(
       (config) => {
-        // const token = localStorage.getItem("token");
-        // if(token && config.headers){
-        //   config.headers.Authorization = token;
-        // }
+        const token = localStorage.getItem("token");
+        if (token && config.headers) {
+          config.headers.Authorization = token;
+        }
         return config;
       },
       (err) => {
@@ -78,4 +82,4 @@ class BearRequest {
     return this.request({ ...config, method: "PATCH" });
   }
 }
-export default BearRequest;
+export default NewBearRequest;

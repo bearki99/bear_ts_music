@@ -60,7 +60,7 @@ const Singers: React.FC<IProps> = () => {
                               "sprite-singer-bg",
                               {
                                 "my-active":
-                                ans.length == 1 || (ans.length == 2 && ans[1] == "") && index == 0 || ans.length == 2 && index == 1 && ans[1] == "signed",
+                                (ans.length == 1 && index == 0 || (ans.length == 2 && ans[1] == "") && index == 0 )|| (ans.length == 2 && index == 1 && ans[1] == "signed"),
                               }
                             )}
                           >

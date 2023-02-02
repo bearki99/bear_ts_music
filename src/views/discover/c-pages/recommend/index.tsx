@@ -11,6 +11,10 @@ import UserDetail from "./c-cpns/user-detail";
 import UserLogin from "./c-cpns/user-login";
 import { fetchRankingDataAction, fetchRecommendsAction } from "./store";
 import { RecommendWrapper } from "./style";
+
+import { getMyLoginStatus} from "@/components/login/service";
+import { getMyLoginData } from "@/components/login/store";
+import { changemyID, changeisLogin } from "@/components/login/store";
 interface IProps {
   children?: ReactNode;
 }
@@ -21,6 +25,24 @@ const Recommend: React.FC<IProps> = () => {
     isLogin: state.login.isLogin,
     currentID: state.login.currentID
   }))
+
+  async function getStatus(cookie: string) {
+    const res = await getMyLoginStatus(cookie);
+    if (res.data.account.status == 0) return res.data.account.id;
+    return 0;
+  }
+
+  useEffect(() => {
+    const cookie = localStorage.getItem("cookie") || "";
+    getStatus(cookie).then((res) => {
+      res && dispatch(changeisLogin(true));
+      res && dispatch(changemyID(res));
+      const obj = {id: res, cookie};
+      res && dispatch(getMyLoginData(obj));
+      !res && dispatch(changeisLogin(false));
+    });
+  }, []);
+
   useEffect(() => {
     dispatch(fetchRecommendsAction());
     dispatch(fetchRankingDataAction());

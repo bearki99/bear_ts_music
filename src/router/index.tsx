@@ -1,5 +1,6 @@
 import React, { lazy } from "react";
-import { RouteObject, Navigate } from "react-router-dom";
+import { Navigate, RouteObject } from "react-router-dom";
+import AuthRouter from "./getroute";
 const Discover = lazy(() => import("@/views/discover"));
 const Download = lazy(() => import("@/views/download"));
 const Focus = lazy(() => import("@/views/focus"));
@@ -25,6 +26,8 @@ const InSinger = lazy(
 const CatSinger = lazy(
   () => import("@/views/discover/c-pages/singers/c-cpns/cat-singer")
 );
+const Test = lazy(() => import("@/views/test"));
+
 const routes: RouteObject[] = [
   { path: "/", element: <Navigate to="/discover" /> },
   {
@@ -55,8 +58,16 @@ const routes: RouteObject[] = [
       },
     ],
   },
-  { path: "/mine", element: <Mine /> },
+  {
+    path: "/mine",
+    element: (
+      <AuthRouter>
+        <Mine />
+      </AuthRouter>
+    ),
+  },
   { path: "/focus", element: <Focus /> },
   { path: "/download", element: <Download /> },
+  { path: "/test", element: <Test /> },
 ];
 export default routes;

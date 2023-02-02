@@ -1,12 +1,11 @@
 const { createProxyMiddleware } = require("http-proxy-middleware");
+
 module.exports = function (app) {
   app.use(
-    createProxyMiddleware("/api1", {
-      target: "http://123.207.32.32:9002", //服务器的地址
+    createProxyMiddleware("/api", {
+      target: "http://localhost:9950",
       changeOrigin: true,
-      pathRewrite: {
-        "^/api1": "", //  重写请求前缀
-      },
+      pathRewrite: { "^/api": "" },
     })
   );
 };

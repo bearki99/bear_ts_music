@@ -6,6 +6,7 @@ import { MyLoginWrapper } from "./style";
 import { useBearDispatch, useBearSelector } from "@/store";
 import mybearRequest from "@/service";
 import { changeisLogin } from "./store";
+import Wait from "./c-cpns/wait";
 
 interface IProps {
   children?: ReactNode;
@@ -20,7 +21,8 @@ const MyLogin: React.FC<IProps> = (props) => {
   }));
   const withCredentials = true;
   const dispatch = useBearDispatch();
-  const [state, setState] = useState(0);
+  //0-还没扫码 1-扫码了但是还没按登录 2-登录 3-过期
+  const [status, setStatus] = useState(0);
   const imgRef = useRef<HTMLImageElement>(null);
   async function checkStatus(key: number) {
     const timerstamp = +new Date();
@@ -69,25 +71,30 @@ const MyLogin: React.FC<IProps> = (props) => {
     }
     const timer = setInterval(async () => {
       const statusRes = await checkStatus(key);
+      console.log(statusRes.code);
       if (statusRes.code === 800) {
         clearInterval(timer);
+        setStatus(3);
         dispatch(changeisLogin(false));
       }
       if (statusRes.code === 802) {
-        console.log("待确认");
+        // console.log("待确认");
+        setStatus(1);
         dispatch(changeisLogin(false));
       }
       if (statusRes.code === 803) {
         clearInterval(timer);
-        console.log("授权登录成功");
+        setStatus(2);
+        // console.log("授权登录成功");
         dispatch(changeisLogin(true));
-        const myres = await getLoginStatus(statusRes.cookie);
         localStorage.setItem("cookie", statusRes.cookie);
         setTimeout(() => {
           window.location.href = "/#/discover/recommend";
-        }, 1000);
+          setStatus(0);
+        }, 2000);
       }
-    }, 3000);
+
+    }, 2000);
   }
   useEffect(() => {
     login();
@@ -99,16 +106,28 @@ const MyLogin: React.FC<IProps> = (props) => {
         <div className="my-show">
           {
             <>
-              <div className="left">
-                <img
-                  src="https://p5.music.126.net/obj/wo3DlcOGw6DClTvDisK1/9643571155/525c/faac/2dc6/fe695c03c7c358ddaa4651736b26a55f.png"
-                  alt=""
-                />
-              </div>
-              <div className="right">
-                <div className="name">扫码登录</div>
-                <img src={imgUrl} alt="" ref={imgRef} />
-              </div>
+              {(status == 0 || status == 3) && (
+                <>
+                  <div className="left">
+                    <img
+                      src="https://p5.music.126.net/obj/wo3DlcOGw6DClTvDisK1/9643571155/525c/faac/2dc6/fe695c03c7c358ddaa4651736b26a55f.png"
+                      alt=""
+                    />
+                  </div>
+                  <div className="right">
+                    <div className="name">扫码登录{status}</div>
+                    <div className="imgs">
+                      <img src={imgUrl} alt="" ref={imgRef} />
+                      {status == 3 && (
+                        <div className="notValid">
+                          <button onClick={login}>刷新</button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </>
+              )}
+              {status == 1 && <Wait />}
             </>
           }
         </div>
