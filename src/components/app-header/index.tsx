@@ -21,6 +21,7 @@ const AppHeader: React.FC<IProps> = () => {
   const { isLogin } = useBearSelector((state) => ({
     isLogin: state.login.isLogin,
   }));
+  const myLogin = localStorage.getItem("token") || localStorage.getItem("cookie");
   function showItem(item: any, index: number) {
     return (
       <a
@@ -62,7 +63,7 @@ const AppHeader: React.FC<IProps> = () => {
           <div className="creator">
             <span>创作者中心</span>
           </div>
-          {isLogin ? (
+          {myLogin ? (
             <button className="exit-btn" onClick={handleExit}>
               退出
             </button>

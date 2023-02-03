@@ -31,7 +31,11 @@ export const exitLogin = createAsyncThunk("exit", async(_, {dispatch})=>{
   const cookie = localStorage.getItem("cookie") as string;
   await exitLoginAction(cookie);
   localStorage.removeItem("cookie");
+  localStorage.removeItem("token");
   dispatch(changeisLogin(false));
+  setTimeout(() => {
+    window.location.href = "/#";
+  }, 2000);
 })
 
 const loginSlice = createSlice({

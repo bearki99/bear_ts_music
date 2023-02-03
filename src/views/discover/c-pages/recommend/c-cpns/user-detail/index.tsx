@@ -12,6 +12,7 @@ const UserDetail: React.FC<IProps> = (props) => {
   const { loginData } = useBearSelector((state) => ({
     loginData: state.login.loginData,
   }));
+  
   const initialName = "bear";
   const initialImg = "http://p2.music.126.net/KJGiLgsOu3-O-oAvkkK1mA==/109951163288303355.jpg?param=80y80";
 
