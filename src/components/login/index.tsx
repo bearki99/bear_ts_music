@@ -7,6 +7,7 @@ import { useBearDispatch, useBearSelector } from "@/store";
 import mybearRequest from "@/service";
 import { changeisLogin } from "./store";
 import Wait from "./c-cpns/wait";
+import InputLogin from "@/components/login-test/index"
 
 interface IProps {
   children?: ReactNode;
@@ -23,6 +24,7 @@ const MyLogin: React.FC<IProps> = (props) => {
   const dispatch = useBearDispatch();
   //0-还没扫码 1-扫码了但是还没按登录 2-登录 3-过期
   const [status, setStatus] = useState(0);
+  const [loginstatus, setLoginStatus] = useState(1); //扫码登录 1/输入密码登录 2
   const imgRef = useRef<HTMLImageElement>(null);
   async function checkStatus(key: number) {
     const timerstamp = +new Date();
@@ -96,6 +98,10 @@ const MyLogin: React.FC<IProps> = (props) => {
 
     }, 2000);
   }
+  const handleLoginClick = () => {
+    if(loginstatus == 1) setLoginStatus(2);
+    else setLoginStatus(1);
+  }
   useEffect(() => {
     login();
   }, []);
@@ -103,7 +109,7 @@ const MyLogin: React.FC<IProps> = (props) => {
   return (
     <MyLoginWrapper show={show}>
       <div className="content">
-        <div className="my-show">
+        {loginstatus == 1 && <div className="my-show">
           {
             <>
               {(status == 0 || status == 3) && (
@@ -115,7 +121,7 @@ const MyLogin: React.FC<IProps> = (props) => {
                     />
                   </div>
                   <div className="right">
-                    <div className="name">扫码登录{status}</div>
+                    <div className="name">扫码登录</div>
                     <div className="imgs">
                       <img src={imgUrl} alt="" ref={imgRef} />
                       {status == 3 && (
@@ -130,10 +136,14 @@ const MyLogin: React.FC<IProps> = (props) => {
               {status == 1 && <Wait />}
             </>
           }
-        </div>
+        </div>}
+        {loginstatus == 2 && <div className="password-login">
+          <InputLogin/>
+          </div>}
         <button className="delete" onClick={handleHidden}>
           x
         </button>
+        <button className="change" onClick={handleLoginClick}>{loginstatus == 1 ? "切换至密码登录" : "切换至扫码登录"}</button>
       </div>
     </MyLoginWrapper>
   );

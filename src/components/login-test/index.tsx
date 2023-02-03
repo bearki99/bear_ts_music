@@ -1,39 +1,57 @@
-import React, { ReactNode, useRef, ElementRef } from "react";
+import React, { ReactNode, useRef, ElementRef, useState } from "react";
 import { memo } from "react";
 import { LoginInputWrapper } from "./style";
 
 import { Button, Input } from "antd";
-// import mybearRequest from "@/service";
-import axios from "axios";
+import { message } from 'antd';
+
+import { newbearRequest } from "@/service";
+import { Vertify } from '@alex_xu/react-slider-vertify';
+import { useBearDispatch } from "@/store";
+import { changeisLogin } from "../login/store";
+
 interface IProps {
   children?: ReactNode;
 }
-const request = axios.create({
-  baseURL: "http://localhost:3001/api",
-  timeout: 60000,
-}).request;
 
 export function getLoginStatus(username: string, password: string) {
   const data = { username, password };
-  return request({
-    url: "mylogin",
-    method: "POST",
-    data,
-  });
+  return newbearRequest.post({
+    url: "/mylogin",
+    data
+  })
 }
 
 const InputLogin: React.FC<IProps> = () => {
   const inputRef = useRef<ElementRef<typeof Input>>(null);
   const passwordRef = useRef<ElementRef<typeof Input>>(null);
-  async function handleClick() {
-    const name = inputRef.current?.input?.value;
-    const password = passwordRef.current?.input?.value;
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const dispatch = useBearDispatch();
+  async function handleSuccess() {
+    const name = inputRef.current?.input?.value as string;
+    const password = passwordRef.current?.input?.value as string;
     const res = await getLoginStatus(name as string, password as string);
-    if (res?.data?.token) localStorage.setItem("token", res?.data?.token);
+    if (res?.token) localStorage.setItem("token", res.token);
+    message.success("成功", 3, ()=>{
+      if(scrollRef.current){
+      scrollRef.current.style.display = "none";
+      }
+      setTimeout(() => {
+        window.location.href = "/#";
+      }, 2000);
+    });
+
+  }
+  function handleClick() {
+    if(scrollRef.current){
+      scrollRef.current.style.display = "block";
+    }
+
   }
   return (
     <LoginInputWrapper>
-      <div className="name">
+      <div className="main-content">
+        <div className="name">
         <Input placeholder="请输入姓名" size="small" ref={inputRef} />
       </div>
       <div className="password">
@@ -43,9 +61,22 @@ const InputLogin: React.FC<IProps> = () => {
           ref={passwordRef}
         />
       </div>
-      <Button type="primary" onClick={handleClick}>
+        <Button type="primary" onClick={handleClick}>
         提交
-      </Button>
+        </Button>
+
+      </div>
+
+
+      <div className="my-verify" ref={scrollRef}>
+          <Vertify
+          width={200}
+          height={160}
+          visible={true}
+          onSuccess={handleSuccess}    //成功触发事件
+          onFail={()=>{message.error("失败", 3);}} // 失败触发事件
+          />
+        </div>
     </LoginInputWrapper>
   );
 };

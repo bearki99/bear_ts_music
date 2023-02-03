@@ -27,6 +27,18 @@ export const MyLoginWrapper = styled.div<IProps>`
       top: 5px;
       right: 7px;
     }
+    .password-login {
+      width: 400px;
+      height: 400px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .change {
+      position: absolute;
+      top: 5px;
+      right: 25px;
+    }
     .my-show {
       display: flex;
       justify-content: center;

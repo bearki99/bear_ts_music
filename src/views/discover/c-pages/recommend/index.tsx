@@ -21,11 +21,10 @@ interface IProps {
 
 const Recommend: React.FC<IProps> = () => {
   const dispatch = useBearDispatch();
-  const {isLogin, currentID} = useBearSelector((state)=>({
-    isLogin: state.login.isLogin,
+  const {currentID} = useBearSelector((state)=>({
     currentID: state.login.currentID
   }))
-
+  const myLogin = localStorage.getItem("token") || localStorage.getItem("cookie");
   async function getStatus(cookie: string) {
     const res = await getMyLoginStatus(cookie);
     if (res.data.account.status == 0) return res.data.account.id;
@@ -58,7 +57,7 @@ const Recommend: React.FC<IProps> = () => {
           <TopRanking/>
         </div>
         <div className="right">
-          {isLogin ? <UserDetail id={currentID}/>:<UserLogin/>}
+          {myLogin ? <UserDetail id={currentID}/>:<UserLogin/>}
           <div className="right-content">
             <ArriveSingers/>
             <HotDj/>

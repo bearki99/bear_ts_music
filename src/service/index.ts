@@ -7,7 +7,7 @@ const mybearRequest = new BearRequest({
   // withCredentials: true,
 });
 export const newbearRequest = new NewBearRequest({
-  baseURL: BASE_URL,
+  baseURL: "/api",
   timeout: TIME_OUT,
 });
 export default mybearRequest;
