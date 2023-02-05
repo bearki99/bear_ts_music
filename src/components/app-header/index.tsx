@@ -1,15 +1,15 @@
-import React, { ReactNode, useState } from "react";
-import { memo } from "react";
-import { HeaderLeft, HeaderRight, HeaderWrapper } from "./style";
+import React, { ReactNode, useState } from 'react';
+import { memo } from 'react';
+import { HeaderLeft, HeaderRight, HeaderWrapper } from './style';
 
-import headerTitles from "@/assets/data/header-titles.json";
-import subnavTitles from "@/assets/data/subnav-title.json";
+import headerTitles from '@/assets/data/header-titles.json';
+import subnavTitles from '@/assets/data/subnav-title.json';
 
-import classNames from "classnames";
-import { Input } from "antd";
-import { useBearDispatch, useBearSelector } from "@/store";
+import classNames from 'classnames';
+import { Input } from 'antd';
+import { useBearDispatch, useBearSelector } from '@/store';
 
-import { exitLogin } from "../login/store";
+import { exitLogin } from '../login/store';
 interface IProps {
   children?: ReactNode;
 }
@@ -21,7 +21,6 @@ const AppHeader: React.FC<IProps> = () => {
   const { isLogin } = useBearSelector((state) => ({
     isLogin: state.login.isLogin,
   }));
-  const myLogin = localStorage.getItem("token") || localStorage.getItem("cookie");
   function showItem(item: any, index: number) {
     return (
       <a
@@ -55,15 +54,12 @@ const AppHeader: React.FC<IProps> = () => {
           </div>
         </HeaderLeft>
         <HeaderRight>
-          <Input
-            placeholder="音乐/视频/电台/用户"
-            className="input sprite-web-logo"
-          />
+          <Input placeholder="音乐/视频/电台/用户" className="input sprite-web-logo" />
           <div className="sprite-web-logo input-logo"></div>
           <div className="creator">
             <span>创作者中心</span>
           </div>
-          {myLogin ? (
+          {localStorage.getItem('ACCESS-TOKEN') || localStorage.getItem('cookie') ? (
             <button className="exit-btn" onClick={handleExit}>
               退出
             </button>
@@ -75,22 +71,22 @@ const AppHeader: React.FC<IProps> = () => {
       {titleindex === 0 && (
         <div className="first-nav">
           {subnavTitles.map((element, index) => {
-            const url = window.location.href.split("/").slice(3);
-            const currentUrl = "/" + url.join("/");
+            const url = window.location.href.split('/').slice(3);
+            const currentUrl = '/' + url.join('/');
             return (
               <a
                 key={index}
                 className={classNames({
-                  "nav-item": true,
+                  'nav-item': true,
                 })}
                 href={element.path}
                 onClick={() => setnavIndex(index)}
               >
                 <div
                   className={classNames({
-                    "nav-active":
+                    'nav-active':
                       currentUrl == element.path ||
-                      currentUrl == "/#/discover/recommend" && index == 0,
+                      (currentUrl == '/#/discover/recommend' && index == 0),
                   })}
                 >
                   {element.title}

@@ -1,5 +1,6 @@
 import React, { ReactNode, useState } from "react";
 import { memo } from "react";
+
 import { LoginWrapper } from "./style";
 import MyLogin from "@/components/login";
 interface IProps {
@@ -10,6 +11,7 @@ const Login: React.FC<IProps> = () => {
   const [show, setShow] = useState(false);
   function handleHidden() {
     setShow(false);
+
   }
   return (
     <LoginWrapper className="sprite-bg">

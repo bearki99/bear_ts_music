@@ -6,6 +6,7 @@ import {
   getQRCodeKey,
   getQRImg,
 } from "../service/index";
+import { removeAccessToken, removeRefreshToken } from "@/service/request/auth.service";
 
 export const getQRData = createAsyncThunk(
   "qr",
@@ -30,12 +31,12 @@ export const getMyLoginData = createAsyncThunk(
 export const exitLogin = createAsyncThunk("exit", async(_, {dispatch})=>{
   const cookie = localStorage.getItem("cookie") as string;
   await exitLoginAction(cookie);
-  localStorage.removeItem("cookie");
-  localStorage.removeItem("token");
+  removeAccessToken();
+  removeRefreshToken();
   dispatch(changeisLogin(false));
   setTimeout(() => {
     window.location.href = "/#";
-  }, 2000);
+  }, 1000);
 })
 
 const loginSlice = createSlice({

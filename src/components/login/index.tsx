@@ -73,7 +73,6 @@ const MyLogin: React.FC<IProps> = (props) => {
     }
     const timer = setInterval(async () => {
       const statusRes = await checkStatus(key);
-      console.log(statusRes.code);
       if (statusRes.code === 800) {
         clearInterval(timer);
         setStatus(3);

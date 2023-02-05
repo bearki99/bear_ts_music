@@ -66,8 +66,8 @@ const routes: RouteObject[] = [
       </AuthRouter>
     ),
   },
-  { path: "/focus", element: <Focus /> },
   { path: "/download", element: <Download /> },
   { path: "/test", element: <Test /> },
+  { path: "*", element: <Test/>}
 ];
 export default routes;

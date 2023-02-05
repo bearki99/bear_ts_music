@@ -20,6 +20,7 @@ import {
   ExtraWrapper,
   PlayerBarWrapper,
 } from "./style";
+import AppPlayerList from "../app-player-list";
 interface IProps {
   children?: ReactNode;
 }
@@ -27,7 +28,7 @@ interface IProps {
 const AppPlayerBar: React.FC<IProps> = () => {
   //获取Redux数据
   //currentSong-当前正在播放的歌曲，currentSongLyric-正在播放的歌曲的歌词
-  const { currentSong, currentSongLyric, playMode } = useBearSelector(
+  const { currentSong, currentSongLyric, playMode, songList } = useBearSelector(
     (state) => ({
       currentSong: state.player.currentSong,
       currentSongLyric: state.player.currentSongLyric,
@@ -42,6 +43,7 @@ const AppPlayerBar: React.FC<IProps> = () => {
   const name = currentSong && currentSong?.name;
   const imgUrl = currentSong && currentSong.al && currentSong.al.picUrl;
   const wantUrl = imgUrl && transformUrl(imgUrl, 35, 35);
+  const currentLen = songList && songList.length;
   let singer =
     currentSong &&
     currentSong.ar &&
@@ -127,7 +129,7 @@ const AppPlayerBar: React.FC<IProps> = () => {
   };
 
   const handleTimeEnded = () => {
-    console.log("end");
+    // console.log("end");
     switch (playMode) {
       case 2:
         if (audioRef.current) {
@@ -184,6 +186,7 @@ const AppPlayerBar: React.FC<IProps> = () => {
                 step={0.5}
                 onAfterChange={handleAfterChange}
                 onChange={handleSliderChanging}
+                tooltip={{ open: false }}
               />
               <span className="starttime">{transformTime(currentTime)} </span>
               <span className="endtime">/ {transformTime(allTime)}</span>
@@ -210,6 +213,9 @@ const AppPlayerBar: React.FC<IProps> = () => {
               })}
               onClick={handleClick}
             ></button>
+            <div className="list">
+              <button className="mylist sprite-btn3">{currentLen}</button>
+            </div>
           </div>
         </ExtraWrapper>
       </div>
@@ -221,6 +227,7 @@ const AppPlayerBar: React.FC<IProps> = () => {
       <div className="lyric-bar">
         {currentSongLyric && currentSongLyric[currentIndex]?.text}
       </div>
+      {/* <AppPlayerList currentSong={currentSong} songList={songList}/> */}
     </PlayerBarWrapper>
   );
 };

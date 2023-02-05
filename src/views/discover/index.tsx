@@ -1,7 +1,7 @@
-import React, { ReactNode } from "react";
-import { Suspense } from "react";
-import { memo } from "react";
-import { Outlet } from "react-router-dom";
+import React, { ReactNode } from 'react';
+import { Suspense } from 'react';
+import { memo } from 'react';
+import { Outlet } from 'react-router-dom';
 interface IProps {
   children?: ReactNode;
 }

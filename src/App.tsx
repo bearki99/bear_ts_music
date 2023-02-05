@@ -31,7 +31,7 @@ function App() {
       res && dispatch(getMyLoginData(obj));
       !res && dispatch(changeisLogin(false));
     });
-    
+
     dispatch(fetchPlayerDataAction(1975753397));
   }, []);
   return (

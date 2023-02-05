@@ -9,6 +9,7 @@ import { SongWrapper } from "./style";
 import { changeCurrentPageAction } from "./store";
 import { useQuery } from "@/utils/useQuery";
 import SongItem from "./song-item";
+import { getloginStatus } from "@/utils/getLoginStatus";
 
 interface IProps {
   children?: ReactNode;
@@ -35,6 +36,7 @@ const Songs: React.FC<IProps> = () => {
   }, []);
   useEffect(() => {
     dispatch(getSongListData({ offset, limit, cat, order }));
+    getloginStatus();
   }, [cat, limit, offset, order]);
   function handleClick(page: number) {
     dispatch(changeCurrentPageAction(page));
