@@ -15,6 +15,8 @@ import { getMyLoginStatus } from "./components/login/service";
 import { changeisLogin, changemyID } from "./components/login/store";
 
 import { getMyLoginData } from "./components/login/store";
+import socketIO from "socket.io-client"
+
 function App() {
   const dispatch = useBearDispatch();
   async function getStatus(cookie: string) {

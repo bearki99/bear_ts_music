@@ -1,22 +1,43 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const MineWrapper = styled.div`
-  background-color: #f5f5f5;
-  >.content {
+  width: 100vw;
+  height: 85vh;
+  background-color: rgb(151, 157, 167);
+  .chatHome {
+    position: absolute;
+    top: 50%;
+    left: 50%;
     display: flex;
-    background-color: white;
-    min-height: 800px;
-    .left {
-      width: 200px;
-      border-right: 1px solid #c5c5c5;
-      background-color: #ececec;
+    box-sizing: border-box;
+    width: 90vw;
+    height: 75vh;
+    padding: 10px;
+    background-color: rgb(39, 42, 55);
+    border-radius: 15px;
+    transform: translate(-50%, -50%);
+    .chatLeft {
+      box-sizing: border-box;
+      padding-left: 20px;
+      width: 280px;
+      .title {
+        padding-bottom: 10px;
+      }
+      .title h1 {
+        padding: 0;
+        margin: 0;
+        color: white;
+      }
+      .chatList {
+        color: white;
+        .list-name {
+          margin: 20px 0;
+          color: rgb(176, 178, 189);
+        }
+      }
     }
-    .right {
+    .chatRight {
       flex: 1;
     }
-    .left, .right {
-      box-sizing: border-box;
-      padding: 20px 10px;
-    }
   }
-`
+`;
