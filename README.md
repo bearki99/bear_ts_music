@@ -2,11 +2,14 @@
 
 
 
-##  技术栈说明
+##  技术栈说明Cancel changes
 
 本项目接口使用开源项目  [Binaryify/NeteaseCloudMusicApi: 网易云音乐 Node.js API service (github.com)](https://github.com/Binaryify/NeteaseCloudMusicApi)
 
 本项目技术栈：React18 + Hooks + Antd + Axios + TypeScript + React-Router-DOM V6 + Redux Toolkit
+
+计划：我的音乐改成我的私信 增加聊天功能，原有的私信界面较丑，进行了改造
+后端接口自己使用express编写，不开源
 
 
 
