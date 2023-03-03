@@ -18,8 +18,8 @@ const Mine: React.FC<IProps> = () => {
     getloginStatus();
   }, []);
   useEffect(()=>{
-    socket.on
-  }, [socket, users]);
+    socket.on('newUserResponse', (data: any) => setUsers(data));
+  }, []);
   return (
     <MineWrapper>
       <div className="chatHome">

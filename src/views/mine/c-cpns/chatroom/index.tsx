@@ -5,7 +5,7 @@ import { Input, Button } from "antd";
 import { message } from "antd";
 
 import { ElementRef } from "react";
-import PersonItem from '../person-item/index'
+import PersonItem from "../person-item/index";
 
 interface IProps {
   children?: ReactNode;
@@ -19,15 +19,30 @@ const ChatRoom: React.FC<IProps> = (props) => {
   const [inputVal, setInputVal] = useState("");
   const ref = useRef<ElementRef<typeof Input>>(null);
   const [messages, setMessages] = useState<any>([]);
-  useEffect(()=>{
-    const userName = localStorage.getItem('username');
-    socket.emit('newUser', {userName, socketID: socket.id});
+  const [typingStatus, setTypingStatus] = useState("");
+  const lastMessageRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const userName = localStorage.getItem("username");
+    socket.emit("newUser", { userName, socketID: socket.id });
   }, []);
   useEffect(() => {
     socket.on("messageResponse", (data: any) =>
       setMessages([...messages, data])
     );
+    if (lastMessageRef.current) {
+      const node = lastMessageRef.current;
+      node.scrollTo({
+        top: node.scrollHeight,
+        behavior: 'smooth'
+      });
+    }
   }, [socket, messages]);
+  // useEffect(() => {
+  //   // 👇️ 每当消息文字变动，都会往下滚动
+  //   if (lastMessageRef.current) {
+  //     lastMessageRef.current?.scrollIntoView({ behavior: "smooth" });
+  //   }
+  // }, [messages]);
   function handleSubmit() {
     let val = inputVal;
     val = val?.replaceAll(" ", "");
@@ -38,7 +53,7 @@ const ChatRoom: React.FC<IProps> = (props) => {
         name: localStorage.getItem("username"),
         id: `${socket.id}${Math.random()}`,
         socketID: socket.id,
-        time: new Date()
+        time: new Date(),
       });
       setInputVal("");
     }
@@ -51,10 +66,11 @@ const ChatRoom: React.FC<IProps> = (props) => {
   };
   return (
     <ChatRoomWrapper>
-      <div className="main-content">
-        {messages && messages.map((item: any)=>{
-          return <PersonItem key={item.id} infoData={item}/>
-        })}
+      <div className="main-content" ref={lastMessageRef}>
+        {messages &&
+          messages.map((item: any) => {
+            return <PersonItem key={item.time} infoData={item} />;
+          })}
       </div>
       <div className="footer">
         <Input.Group compact size="large">
