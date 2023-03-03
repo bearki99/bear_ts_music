@@ -1,18 +1,18 @@
-import React, { ReactNode, useRef, ElementRef, useState } from 'react';
-import { memo } from 'react';
-import { LoginInputWrapper } from './style';
+import React, { ReactNode, useRef, ElementRef, useState } from "react";
+import { memo } from "react";
+import { LoginInputWrapper } from "./style";
 
-import { Button, Input } from 'antd';
-import { message } from 'antd';
+import { Button, Input } from "antd";
+import { message } from "antd";
 
-import { newbearRequest } from '@/service';
-import { Vertify } from '@alex_xu/react-slider-vertify';
-import { useBearDispatch } from '@/store';
+import { newbearRequest } from "@/service";
+import { Vertify } from "@alex_xu/react-slider-vertify";
+import { useBearDispatch } from "@/store";
 import {
   getAccessToken,
   setAccessToken,
-  setRefreshToken
-} from '@/service/request/auth.service';
+  setRefreshToken,
+} from "@/service/request/auth.service";
 
 interface IProps {
   children?: ReactNode;
@@ -21,7 +21,7 @@ interface IProps {
 export function getLoginStatus(username: string, password: string) {
   const data = { username, password };
   return newbearRequest.post({
-    url: '/mylogin',
+    url: "/mylogin",
     data,
   });
 }
@@ -34,10 +34,11 @@ const InputLogin: React.FC<IProps> = () => {
     const username = inputRef.current?.input?.value as string;
     const password = passwordRef.current?.input?.value as string;
     const data = { username, password };
+    localStorage.setItem("username", username);
     newbearRequest
       .post({
-        url:"/mylogin",
-        data
+        url: "/mylogin",
+        data,
       })
       .then((data) => {
         const { token, refreshToken } = data.data;
@@ -45,18 +46,18 @@ const InputLogin: React.FC<IProps> = () => {
         setRefreshToken(refreshToken);
       })
       .catch((err) => console.log(err));
-    message.success('成功', 3, () => {
+    message.success("成功", 3, () => {
       if (scrollRef.current) {
-        scrollRef.current.style.display = 'none';
+        scrollRef.current.style.display = "none";
       }
       setTimeout(() => {
-        window.location.href = '/#';
+        window.location.href = "/#";
       }, 2000);
     });
   }
   function handleClick() {
     if (scrollRef.current) {
-      scrollRef.current.style.display = 'block';
+      scrollRef.current.style.display = "block";
     }
   }
   return (
@@ -66,7 +67,11 @@ const InputLogin: React.FC<IProps> = () => {
           <Input placeholder="请输入姓名" size="small" ref={inputRef} />
         </div>
         <div className="password">
-          <Input.Password placeholder="请输入密码" size="small" ref={passwordRef} />
+          <Input.Password
+            placeholder="请输入密码"
+            size="small"
+            ref={passwordRef}
+          />
         </div>
         <Button type="primary" onClick={handleClick}>
           提交
@@ -80,7 +85,7 @@ const InputLogin: React.FC<IProps> = () => {
           visible={true}
           onSuccess={handleSuccess} //成功触发事件
           onFail={() => {
-            message.error('失败', 3);
+            message.error("失败", 3);
           }} // 失败触发事件
         />
       </div>
@@ -88,4 +93,4 @@ const InputLogin: React.FC<IProps> = () => {
   );
 };
 export default memo(InputLogin);
-InputLogin.displayName = 'InputLogin';
+InputLogin.displayName = "InputLogin";

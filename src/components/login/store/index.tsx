@@ -33,6 +33,7 @@ export const exitLogin = createAsyncThunk("exit", async(_, {dispatch})=>{
   await exitLoginAction(cookie);
   removeAccessToken();
   removeRefreshToken();
+  localStorage.removeItem("username");
   dispatch(changeisLogin(false));
   setTimeout(() => {
     window.location.href = "/#";

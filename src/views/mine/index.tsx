@@ -33,7 +33,7 @@ const Mine: React.FC<IProps> = () => {
           </div>
         </div>
         <div className="chatRight">
-          <Chatroom id={id} />
+          <Chatroom id={id} socket={socket}/>
         </div>
       </div>
     </MineWrapper>
