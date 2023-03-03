@@ -54,6 +54,7 @@ const InputLogin: React.FC<IProps> = () => {
         window.location.href = "/#";
       }, 2000);
     });
+    
   }
   function handleClick() {
     if (scrollRef.current) {

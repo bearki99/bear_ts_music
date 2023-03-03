@@ -7,7 +7,7 @@ interface IProps {
   children?: ReactNode;
 }
 
-const ChatItem: React.FC<IProps> = () => {
+const ChatItem: React.FC<IProps> = (props) => {
   return (
     <ChatItemWrapper>
       <div

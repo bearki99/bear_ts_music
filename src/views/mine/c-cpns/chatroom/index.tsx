@@ -5,6 +5,7 @@ import { Input, Button } from "antd";
 import { message } from "antd";
 
 import { ElementRef } from "react";
+import PersonItem from '../person-item/index'
 
 interface IProps {
   children?: ReactNode;
@@ -18,7 +19,10 @@ const ChatRoom: React.FC<IProps> = (props) => {
   const [inputVal, setInputVal] = useState("");
   const ref = useRef<ElementRef<typeof Input>>(null);
   const [messages, setMessages] = useState<any>([]);
-
+  useEffect(()=>{
+    const userName = localStorage.getItem('username');
+    socket.emit('newUser', {userName, socketID: socket.id});
+  }, []);
   useEffect(() => {
     socket.on("messageResponse", (data: any) =>
       setMessages([...messages, data])
@@ -34,6 +38,7 @@ const ChatRoom: React.FC<IProps> = (props) => {
         name: localStorage.getItem("username"),
         id: `${socket.id}${Math.random()}`,
         socketID: socket.id,
+        time: new Date()
       });
       setInputVal("");
     }
@@ -46,7 +51,11 @@ const ChatRoom: React.FC<IProps> = (props) => {
   };
   return (
     <ChatRoomWrapper>
-      <div className="main-content"></div>
+      <div className="main-content">
+        {messages && messages.map((item: any)=>{
+          return <PersonItem key={item.id} infoData={item}/>
+        })}
+      </div>
       <div className="footer">
         <Input.Group compact size="large">
           <Input

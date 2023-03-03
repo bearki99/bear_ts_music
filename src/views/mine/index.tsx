@@ -11,13 +11,15 @@ interface IProps {
 }
 
 const Mine: React.FC<IProps> = () => {
+  const [users, setUsers] = useState([]);
+  const [id, changeID] = useState(0);
+  const socket = (socketIO as any).connect("http://localhost:4000");
   useEffect(() => {
     getloginStatus();
   }, []);
-  const [id, changeID] = useState(0);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const socket = (socketIO as any).connect("http://localhost:4000");
-
+  useEffect(()=>{
+    socket.on
+  }, [socket, users]);
   return (
     <MineWrapper>
       <div className="chatHome">
