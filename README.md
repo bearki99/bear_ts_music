@@ -8,8 +8,8 @@
 
 本项目技术栈：React18 + Hooks + Antd + Axios + TypeScript + React-Router-DOM V6 + Redux Toolkit + Socket.io
 
-计划：我的音乐改成我的私信 目前已完成初步聊天功能，接下来进行界面的升级改造
-增加文件传输功能
+计划：我的音乐改成我的私信 目前已完成初步聊天功能，接下来进行界面的升级改造(3-4 初步聊天功能结束)
+增加文件传输、图片传输、emoji功能
 对Redux持久化进行配置
 
 
