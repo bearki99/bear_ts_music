@@ -2246,6 +2246,11 @@
     "@types/mime" "*"
     "@types/node" "*"
 
+"@types/smoothscroll-polyfill@^0.3.1":
+  "integrity" "sha512-+KkHw4y+EyeCtVXET7woHUhIbfWFCflc0E0mZnSV+ZdjPQeHt/9KPEuT7gSW/kFQ8O3EG30PLO++YhChDt8+Ag=="
+  "resolved" "https://registry.npmmirror.com/@types/smoothscroll-polyfill/-/smoothscroll-polyfill-0.3.1.tgz"
+  "version" "0.3.1"
+
 "@types/sockjs@^0.3.33":
   "integrity" "sha512-f0KEEe05NvUnat+boPTZ0dgaLZ4SfSouXUgv5noUiefG2ajgKjmETo9ZJyuqsl7dfl2aHlLJUiki6B4ZYldiiw=="
   "resolved" "https://registry.npmmirror.com/@types/sockjs/-/sockjs-0.3.33.tgz"
@@ -9359,6 +9364,11 @@
   "integrity" "sha512-3dOsAHXXUkQTpOYcoAxLIorMTp4gIQr5IW3iVb7A7lFIp0VHhnynm9izx6TssdrIcVIESAlVjtnO2K8bg+Coew=="
   "resolved" "https://registry.npmmirror.com/slash/-/slash-4.0.0.tgz"
   "version" "4.0.0"
+
+"smoothscroll-polyfill@^0.4.4":
+  "integrity" "sha512-TK5ZA9U5RqCwMpfoMq/l1mrH0JAR7y7KRvOBx0n2869aLxch+gT9GhN3yUfjiw+d/DiF1mKo14+hd62JyMmoBg=="
+  "resolved" "https://registry.npmmirror.com/smoothscroll-polyfill/-/smoothscroll-polyfill-0.4.4.tgz"
+  "version" "0.4.4"
 
 "socket.io-adapter@0.5.0":
   "integrity" "sha512-zmYvlFJay9skt4yk1MffE9p93HKvQtyy0BLZ5dRM73bOXFJXNZWq8qZVdY456sLaxdK6fHGiZ7glxzqvzwGzkw=="

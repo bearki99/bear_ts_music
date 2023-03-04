@@ -21,6 +21,39 @@ const ChatRoom: React.FC<IProps> = (props) => {
   const [messages, setMessages] = useState<any>([]);
   const [typingStatus, setTypingStatus] = useState("");
   const lastMessageRef = useRef<HTMLDivElement>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+  const smoothScrollToBottom = () => {
+    const chatContainer = chatContainerRef.current;
+    if (chatContainer) {
+      const chatContentHeight = chatContainer.scrollHeight;
+      const scrollDuration = 500;
+      let startTime = 0;
+      const startScrollTop = chatContainer.scrollTop;
+      const endScrollTop = chatContentHeight - chatContainer.clientHeight;
+
+      const easeInOutCubic = (t: number) =>
+        t < 0.5
+          ? 4 * t * t * t
+          : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
+
+      const animateScroll = (timestamp: number) => {
+        if (!startTime) {
+          startTime = timestamp;
+        }
+        const elapsedTime = timestamp - startTime;
+        const progress = easeInOutCubic(elapsedTime / scrollDuration);
+        const newScrollTop = startScrollTop + progress * (endScrollTop - startScrollTop);
+        chatContainer.scrollTo({ top: newScrollTop, behavior: "auto" });
+        if (elapsedTime < scrollDuration) {
+          requestAnimationFrame(animateScroll);
+        } else {
+          chatContainer.scrollTo({ top: chatContentHeight, behavior: "auto" });
+        }
+      };
+
+      requestAnimationFrame(animateScroll);
+    }
+  };
   useEffect(() => {
     const userName = localStorage.getItem("username");
     socket.emit("newUser", { userName, socketID: socket.id });
@@ -29,20 +62,15 @@ const ChatRoom: React.FC<IProps> = (props) => {
     socket.on("messageResponse", (data: any) =>
       setMessages([...messages, data])
     );
-    if (lastMessageRef.current) {
-      const node = lastMessageRef.current;
-      node.scrollTo({
-        top: node.scrollHeight,
-        behavior: 'smooth'
-      });
-    }
+    // if (chatContainerRef.current) {
+    //   const node = chatContainerRef.current;
+    //   node.scrollTo({
+    //     top: node.scrollHeight,
+    //     behavior: "smooth",
+    //   });
+    // }
+    smoothScrollToBottom();
   }, [socket, messages]);
-  // useEffect(() => {
-  //   // 👇️ 每当消息文字变动，都会往下滚动
-  //   if (lastMessageRef.current) {
-  //     lastMessageRef.current?.scrollIntoView({ behavior: "smooth" });
-  //   }
-  // }, [messages]);
   function handleSubmit() {
     let val = inputVal;
     val = val?.replaceAll(" ", "");
@@ -53,7 +81,7 @@ const ChatRoom: React.FC<IProps> = (props) => {
         name: localStorage.getItem("username"),
         id: `${socket.id}${Math.random()}`,
         socketID: socket.id,
-        time: new Date().toLocaleString()
+        time: new Date().toLocaleString(),
       });
       setInputVal("");
     }
@@ -66,7 +94,7 @@ const ChatRoom: React.FC<IProps> = (props) => {
   };
   return (
     <ChatRoomWrapper>
-      <div className="main-content" ref={lastMessageRef}>
+      <div className="main-content" ref={chatContainerRef}>
         {messages &&
           messages.map((item: any) => {
             return <PersonItem key={item.time} infoData={item} />;
