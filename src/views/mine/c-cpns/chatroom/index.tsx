@@ -38,7 +38,7 @@ const ChatRoom: React.FC<IProps> = (props) => {
         name: localStorage.getItem("username"),
         id: `${socket.id}${Math.random()}`,
         socketID: socket.id,
-        time: new Date()
+        time: new Date().toLocaleString()
       });
       setInputVal("");
     }

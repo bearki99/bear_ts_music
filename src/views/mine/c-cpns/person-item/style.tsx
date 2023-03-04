@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 export const PersonItemWrapper = styled.div`
     width: 100%;
+    padding: 10px 0;
     .left-content {
         float: left;
         .des {
@@ -31,7 +32,18 @@ export const PersonItemWrapper = styled.div`
         }
     }
     .main-detail {
+        margin-top: 5px;
         display: flex;
+        align-items: center;
+        .icon {
+            margin-right: 5px;
+        }
+        .name {
+            margin-right: 5px;
+        }
+        .name, .time {
+            color: white;
+        }
     }
     .clearfix::after {
         display: block;
