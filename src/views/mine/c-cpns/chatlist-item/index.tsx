@@ -1,17 +1,21 @@
-import React, { ReactNode } from 'react';
-import { memo } from 'react';
-import { ChatItemWrapper } from './style';
-import Pic from '@/assets/img/head_portrait.jpg';
-import classNames from 'classnames';
+import React, { ReactNode } from "react";
+import { memo } from "react";
+import { ChatItemWrapper } from "./style";
+import Pic from "@/assets/img/head_portrait.jpg";
+import classNames from "classnames";
 interface IProps {
   children?: ReactNode;
+  infoData?: any;
+  activeUser: string[];
 }
 
 const ChatItem: React.FC<IProps> = (props) => {
+  const {activeUser, infoData} = props;
+  const {name, des} = infoData;
   return (
     <ChatItemWrapper>
       <div
-        className={classNames('info', {
+        className={classNames("info", {
           activeCard: true,
         })}
       >
@@ -21,12 +25,12 @@ const ChatItem: React.FC<IProps> = (props) => {
           </div>
         </div>
         <div className="right">
-          <div className="name">大毛</div>
-          <div className="des">我是大毛</div>
+          <div className="name">{name}</div>
+          <div className="des">{des}</div>
         </div>
       </div>
     </ChatItemWrapper>
   );
 };
 export default memo(ChatItem);
-ChatItem.displayName = 'ChatItem';
+ChatItem.displayName = "ChatItem";

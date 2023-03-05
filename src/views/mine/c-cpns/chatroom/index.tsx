@@ -54,21 +54,14 @@ const ChatRoom: React.FC<IProps> = (props) => {
       requestAnimationFrame(animateScroll);
     }
   };
-  useEffect(() => {
-    const userName = localStorage.getItem("username");
-    socket.emit("newUser", { userName, socketID: socket.id });
-  }, []);
+  // useEffect(() => {
+  //   const userName = localStorage.getItem("username");
+  //   socket.emit("newUser", { userName, socketID: socket.id });
+  // }, []);
   useEffect(() => {
     socket.on("messageResponse", (data: any) =>
       setMessages([...messages, data])
     );
-    // if (chatContainerRef.current) {
-    //   const node = chatContainerRef.current;
-    //   node.scrollTo({
-    //     top: node.scrollHeight,
-    //     behavior: "smooth",
-    //   });
-    // }
     smoothScrollToBottom();
   }, [socket, messages]);
   function handleSubmit() {

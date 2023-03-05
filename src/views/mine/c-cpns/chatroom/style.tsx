@@ -20,13 +20,13 @@ export const ChatRoomWrapper = styled.div`
     // 滚动条头
     ::-webkit-scrollbar-thumb {
       border-radius: 1em;
-      background-color: rgba(0, 21, 41, 0.2);
+      background-color: rgba(0, 21, 41, 0.3);
     }
 
     // 滚动条轨道
     ::-webkit-scrollbar-track {
       border-radius: 1em;
-      background-color: rgba(250, 234, 234, 0.2);
+      background-color: rgba(255, 236, 236, 0.6);
     }
   }
 `;

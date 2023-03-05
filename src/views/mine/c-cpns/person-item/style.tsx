@@ -36,6 +36,13 @@ export const PersonItemWrapper = styled.div`
   }
   .main-detail {
     display: flex;
+    align-items: center;
+    .name {
+      margin: 0 5px;
+    }
+    .name, .time {
+      color: white;
+    }
   }
   .clearfix::after {
     display: block;
