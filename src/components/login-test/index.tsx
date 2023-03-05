@@ -1,4 +1,4 @@
-import React, { ReactNode, useRef, ElementRef, useState } from "react";
+import React, { ReactNode, useRef, ElementRef, useState, useContext } from "react";
 import { memo } from "react";
 import { LoginInputWrapper } from "./style";
 
@@ -13,6 +13,7 @@ import {
   setAccessToken,
   setRefreshToken,
 } from "@/service/request/auth.service";
+import { SocketContext } from "@/App";
 
 interface IProps {
   children?: ReactNode;
@@ -27,6 +28,7 @@ export function getLoginStatus(username: string, password: string) {
 }
 
 const InputLogin: React.FC<IProps> = () => {
+  const socket:any = useContext(SocketContext);
   const inputRef = useRef<ElementRef<typeof Input>>(null);
   const passwordRef = useRef<ElementRef<typeof Input>>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -34,7 +36,7 @@ const InputLogin: React.FC<IProps> = () => {
     const username = inputRef.current?.input?.value as string;
     const password = passwordRef.current?.input?.value as string;
     const data = { username, password };
-    localStorage.setItem("username", username);
+    
     newbearRequest
       .post({
         url: "/mylogin",
@@ -44,16 +46,18 @@ const InputLogin: React.FC<IProps> = () => {
         const { token, refreshToken } = data.data;
         setAccessToken(token);
         setRefreshToken(refreshToken);
+        localStorage.setItem("username", username);
+        socket.emit('newUser', { username, socketID: socket.id });
       })
       .catch((err) => console.log(err));
-    message.success("成功", 3, () => {
-      if (scrollRef.current) {
-        scrollRef.current.style.display = "none";
-      }
-      setTimeout(() => {
-        window.location.href = "/#";
-      }, 2000);
-    });
+      message.success("成功", 3, () => {
+        if (scrollRef.current) {
+          scrollRef.current.style.display = "none";
+        }
+        setTimeout(() => {
+          window.location.href = "/#";
+        }, 2000);
+      });
     
   }
   function handleClick() {

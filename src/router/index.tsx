@@ -62,7 +62,7 @@ const routes: RouteObject[] = [
     path: "/mine",
     element: (
       <AuthRouter>
-        <Mine />
+        <Mine/>
       </AuthRouter>
     ),
   },

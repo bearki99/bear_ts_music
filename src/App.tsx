@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect } from "react";
+import React, { Suspense, useEffect, createContext, useState } from "react";
 import { useRoutes } from "react-router-dom";
 import "normalize.css";
 
@@ -16,8 +16,21 @@ import { changeisLogin, changemyID } from "./components/login/store";
 
 import { getMyLoginData } from "./components/login/store";
 
+import socketIO from "socket.io-client";
+
+export const SocketContext = createContext(null);
 function App() {
   const dispatch = useBearDispatch();
+  const [socket, setSocket] = useState(null);
+
+   useEffect(() => {
+    const socket = (socketIO as any).connect("http://localhost:4000");
+    setSocket(socket);
+    // 在组件卸载时关闭 socket 连接
+    return () => {
+      socket.close();
+    };
+  }, []);
   async function getStatus(cookie: string) {
     const res = await getMyLoginStatus(cookie);
     if (res.data.account.status == 0) return res.data.account.id;
@@ -38,7 +51,9 @@ function App() {
   return (
     <div className="App">
       <AppHeader />
-      <Suspense>{useRoutes(routes)}</Suspense>
+      <SocketContext.Provider value={socket}>
+        <Suspense>{useRoutes(routes)}</Suspense>
+      </SocketContext.Provider>
       <AppPlayerBar />
       <TopItem />
     </div>

@@ -1,6 +1,8 @@
 import styled from 'styled-components';
-
-export const ChatItemWrapper = styled.div`
+interface IWrapper {
+  isActive: boolean;
+}
+export const ChatItemWrapper = styled.div<IWrapper>`
   width: 250px;
   height: 80px;
   border-radius: 10px;
@@ -28,7 +30,6 @@ export const ChatItemWrapper = styled.div`
       position: relative;
       width: 50px;
       height: 50px;
-      // border: 2px solid rgb(137,140,151)
       border: 2px solid rgb(255, 255, 255);
       border-radius: 50%;
       &::before {
@@ -38,7 +39,7 @@ export const ChatItemWrapper = styled.div`
         display: block;
         width: 15px;
         height: 15px;
-        background-color: rgb(144, 225, 80);
+        background-color: ${props => props.isActive ? "rgb(144, 225, 80)" : "rgb(146, 154, 139)"};
         border-radius: 50%;
         content: '';
       }
@@ -46,7 +47,6 @@ export const ChatItemWrapper = styled.div`
         position: absolute;
         top: 50%;
         left: 50%;
-        // padding
         box-sizing: border-box;
         width: 45px;
         height: 45px;
@@ -67,5 +67,8 @@ export const ChatItemWrapper = styled.div`
         }
       }
     }
+  }
+  img {
+    filter: ${props => props.isActive ? "grayscale(0%)" : "grayscale(100%)"} !important;
   }
 `;

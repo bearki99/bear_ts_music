@@ -7,21 +7,28 @@ interface IProps {
   children?: ReactNode;
   infoData?: any;
   activeUser: string[];
+  handleMyClick?: any;
+  nowUser?: string;
 }
 
 const ChatItem: React.FC<IProps> = (props) => {
-  const {activeUser, infoData} = props;
+  const {activeUser, infoData, handleMyClick, nowUser} = props;
   const {name, des} = infoData;
+  const handleClick = function(name: string){
+    handleMyClick(name);
+  }
+  const isActive = activeUser.indexOf(name) !== -1;
   return (
-    <ChatItemWrapper>
+    <ChatItemWrapper isActive={isActive}>
       <div
         className={classNames("info", {
-          activeCard: true,
+          activeCard: name ===  nowUser,
         })}
+        onClick={()=>handleClick(name)}
       >
         <div className="left">
           <div className="icon">
-            <img src={Pic} alt="" />
+            <img src={require(`@/assets/img/head_portrait_${name}.jpg`)} alt="" />
           </div>
         </div>
         <div className="right">

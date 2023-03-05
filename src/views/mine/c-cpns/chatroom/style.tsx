@@ -1,15 +1,47 @@
 import styled from "styled-components";
 
 export const ChatRoomWrapper = styled.div`
-
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 73vh;
   box-sizing: border-box;
-  padding: 10px;
-  padding-top: 20px;
   margin-left: 20px;
+  .header {
+    height: 80px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    .left {
+      display: flex;
+      align-items: center;
+      height: 100%;
+      margin-left: 10px;
+    }
+    img {
+      width: 50px;
+      height: 50px;
+      padding: 3px;
+      border-radius: 25px;
+      border: 2px solid rgb(255, 255, 255);
+      border-radius: 50%;
+    }
+    span {
+      font-size: 20px;
+      margin-left: 10px;
+      color: white;
+      line-height: 50px;
+    }
+  }
   .main-content {
-    padding: 10px;
     width: 100%;
-    height: 65vh;
+    box-sizing: border-box;
+    padding: 10px 20px;
+    margin-bottom: 10px;
+    background-color: #2c2d5843;
+    border: 1px solid #c5c5c51c;
+    border-radius: 20px;
+    flex: 1;
     overflow-y: auto;
     // 滚动条
     ::-webkit-scrollbar {
@@ -27,6 +59,24 @@ export const ChatRoomWrapper = styled.div`
     ::-webkit-scrollbar-track {
       border-radius: 1em;
       background-color: rgba(255, 236, 236, 0.6);
+    }
+  }
+  .footer {
+    margin-left: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 50px;
+    .input-group {
+      margin-left: 20px;
+    }
+    .my-input {
+      margin-left: 10px;
+      border-radius: 5px !important;
+    }
+    .mybtn {
+      margin-left: 10px;
     }
   }
 `;

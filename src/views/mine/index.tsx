@@ -1,14 +1,16 @@
 import { getloginStatus } from "@/utils/getLoginStatus";
-import React, { ReactNode, useState, useRef } from "react";
+import React, { ReactNode, useState, useRef, useContext } from "react";
 import { memo, useEffect } from "react";
 import ChatlistItem from "./c-cpns/chatlist-item";
 import Chatroom from "./c-cpns/chatroom";
 import { MineWrapper } from "./style";
-import socketIO from "socket.io-client";
+// import socketIO from "socket.io-client";
 import myData from "@/assets/data/chat-data.json";
+import { SocketContext } from "@/App";
 
 interface IProps {
   children?: ReactNode;
+  socket?: any;
 }
 
 interface IData {
@@ -16,26 +18,28 @@ interface IData {
   des: string;
 }
 
-const Mine: React.FC<IProps> = () => {
+const Mine: React.FC<IProps> = (props) => {
+  const socket = useContext(SocketContext);
   const [users, setUsers] = useState([]);
   const [id, changeID] = useState(0);
-  const [selectUser, setselectUser] = useState(0);
-  const socket = (socketIO as any).connect("http://localhost:4000");
+  const [selectUser, setselectUser] = useState('');
+
   useEffect(() => {
     getloginStatus();
-    const userName = localStorage.getItem("username");
-    if (
-      !users.length ||
-      (newUsers?.indexOf(userName || "") === -1 && socket.id)
-    ) {
-      socket.emit("newUser", { userName, socketID: socket.id });
-    }
+  //   const userName = localStorage.getItem("username");
+  //   if (
+  //     !users.length ||
+  //     (newUsers?.indexOf(userName || "") === -1 && socket.id)
+  //   ) {
+  //     socket.emit("newUser", { userName, socketID: socket.id });
+    // }
   }, []);
-  useEffect(() => {
-    socket.on("newUserResponse", (data: any) => {
-      setUsers(data);
-    });
-  }, []);
+  // useEffect(() => {
+  //   socket.on("newUserResponse", (data: any) => {
+  //     console.log(data);
+  //     setUsers(data);
+  //   });
+  // }, []);
   const newUsers: string[] = users.map((item: any) => item.userName);
   const activeUser: string[] = [];
   newUsers.forEach((item: string, index: number) => {
@@ -59,7 +63,9 @@ const Mine: React.FC<IProps> = () => {
                   <ChatlistItem
                     key={item.name}
                     activeUser={activeUser}
+                    nowUser={selectUser}
                     infoData={item}
+                    handleMyClick={setselectUser}
                   />
                 );
               })}
@@ -69,7 +75,7 @@ const Mine: React.FC<IProps> = () => {
           </div>
         </div>
         <div className="chatRight">
-          <Chatroom id={id} socket={socket} />
+          <Chatroom id={id} socket={socket} selectUser={selectUser}/>
         </div>
       </div>
     </MineWrapper>
