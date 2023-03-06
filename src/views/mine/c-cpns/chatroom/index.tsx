@@ -61,12 +61,12 @@ const ChatRoom: React.FC<IProps> = (props) => {
       requestAnimationFrame(animateScroll);
     }
   };
-  // useEffect(() => {
-  //   socket.on("messageResponse", (data: any) =>
-  //     setMessages([...messages, data])
-  //   );
-  //   smoothScrollToBottom();
-  // }, [socket, messages]);
+  useEffect(() => {
+    socket.on("messageResponse", (data: any) =>
+      setMessages([...messages, data])
+    );
+    smoothScrollToBottom();
+  }, [socket, messages]);
 
   function handleSubmit() {
     let val = inputVal;
@@ -117,7 +117,7 @@ const ChatRoom: React.FC<IProps> = (props) => {
         <Dropdown placement="topLeft" 
         trigger={['click']} 
         open={showEmoji}
-        onVisibleChange={setShowEmoji}
+        onOpenChange={setShowEmoji}
         dropdownRender={()=><Emoji handleEmoji={handleEmoji}/>} 
         arrow={{ pointAtCenter: true }}>
           <Button className="my-btn1">

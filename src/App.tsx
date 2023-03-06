@@ -19,10 +19,10 @@ import { getMyLoginData } from "./components/login/store";
 import socketIO from "socket.io-client";
 
 export const SocketContext = createContext(null);
+export const UserContext = createContext(null);
 function App() {
   const dispatch = useBearDispatch();
   const [socket, setSocket] = useState(null);
-
    useEffect(() => {
     const socket = (socketIO as any).connect("http://localhost:4000");
     setSocket(socket);
