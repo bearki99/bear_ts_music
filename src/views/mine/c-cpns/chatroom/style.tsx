@@ -79,4 +79,24 @@ export const ChatRoomWrapper = styled.div`
       margin-left: 10px;
     }
   }
+  .input-group {
+    display: flex;
+    align-items: center;
+  }
+  .my-btn1 {
+    margin-right: 10px;
+    width: 50px;
+    height: 50px;
+    background-color: rgb(66, 70, 86);
+    border-radius: 15px;
+    border: 1px solid rgb(80, 85, 103);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    img {
+      text-align: center;
+      width: 30px;
+      height: 30px;
+    }
+  }
 `;

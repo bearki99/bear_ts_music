@@ -8,6 +8,7 @@ import type { MenuProps } from 'antd';
 
 import { ElementRef } from "react";
 import PersonItem from "../person-item/index";
+import Emoji from "../emoji";
 
 interface IProps {
   children?: ReactNode;
@@ -17,13 +18,17 @@ interface IProps {
 }
 
 const ChatRoom: React.FC<IProps> = (props) => {
-  const { id, socket, selectUser } = props;
+  const { socket, selectUser } = props;
   const [messageApi, contextHolder] = message.useMessage();
+
   const [inputVal, setInputVal] = useState("");
-  const ref = useRef<ElementRef<typeof Input>>(null);
+  const [showEmoji, setShowEmoji] = useState(false);  
   const [messages, setMessages] = useState<any>([]);
-  const [typingStatus, setTypingStatus] = useState("");
+
+  const ref = useRef<ElementRef<typeof Input>>(null);
+
   const chatContainerRef = useRef<HTMLDivElement>(null);
+
   const smoothScrollToBottom = () => {
     const chatContainer = chatContainerRef.current;
     if (chatContainer) {
@@ -56,38 +61,13 @@ const ChatRoom: React.FC<IProps> = (props) => {
       requestAnimationFrame(animateScroll);
     }
   };
-  const items: MenuProps['items'] = [
-  {
-    key: '1',
-    label: (
-      <a target="_blank" rel="noopener noreferrer" href="https://www.antgroup.com">
-        1st menu item
-      </a>
-    ),
-  },
-  {
-    key: '2',
-    label: (
-      <a target="_blank" rel="noopener noreferrer" href="https://www.aliyun.com">
-        2nd menu item
-      </a>
-    ),
-  },
-  {
-    key: '3',
-    label: (
-      <a target="_blank" rel="noopener noreferrer" href="https://www.luohanacademy.com">
-        3rd menu item
-      </a>
-    ),
-  },
-];
   // useEffect(() => {
   //   socket.on("messageResponse", (data: any) =>
   //     setMessages([...messages, data])
   //   );
   //   smoothScrollToBottom();
   // }, [socket, messages]);
+
   function handleSubmit() {
     let val = inputVal;
     val = val?.replaceAll(" ", "");
@@ -109,6 +89,9 @@ const ChatRoom: React.FC<IProps> = (props) => {
       content: "输入不能为空",
     });
   };
+  const handleEmoji = (item: string) => {
+    setShowEmoji(false);
+  }
   return (
     <ChatRoomWrapper>
       { selectUser=='' && <div>欢迎来到聊天室</div>}
@@ -129,9 +112,18 @@ const ChatRoom: React.FC<IProps> = (props) => {
       </div>
       <div className="footer">
         <Input.Group  size="large" className="input-group">
-          <Dropdown menu={{ items }} placement="top" arrow={{ pointAtCenter: true }}>
-            <Button>top</Button>
-          </Dropdown>
+        
+        {/* emoji表情 */}
+        <Dropdown placement="topLeft" 
+        trigger={['click']} 
+        open={showEmoji}
+        onVisibleChange={setShowEmoji}
+        dropdownRender={()=><Emoji handleEmoji={handleEmoji}/>} 
+        arrow={{ pointAtCenter: true }}>
+          <Button className="my-btn1">
+            <img src={require("@/assets/img/emoji/smiling-face.png")} alt="" />
+          </Button>
+        </Dropdown>
           <Input
             style={{ width: "calc(100% - 200px)" }}
             placeholder="请输入聊天内容"
