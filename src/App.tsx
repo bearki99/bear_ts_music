@@ -50,8 +50,9 @@ function App() {
   }, []);
   return (
     <div className="App">
-      <AppHeader />
+      
       <SocketContext.Provider value={socket}>
+        <AppHeader />
         <Suspense>{useRoutes(routes)}</Suspense>
       </SocketContext.Provider>
       <AppPlayerBar />

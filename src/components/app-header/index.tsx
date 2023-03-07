@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from 'react';
+import React, { ReactNode, useContext, useState, useEffect } from 'react';
 import { memo } from 'react';
 import { HeaderLeft, HeaderRight, HeaderWrapper } from './style';
 
@@ -10,6 +10,7 @@ import { Input } from 'antd';
 import { useBearDispatch, useBearSelector } from '@/store';
 
 import { exitLogin } from '../login/store';
+import { SocketContext } from '@/App';
 interface IProps {
   children?: ReactNode;
 }
@@ -17,10 +18,13 @@ interface IProps {
 const AppHeader: React.FC<IProps> = () => {
   const [titleindex, setIndex] = useState(0);
   const [subnavIndex, setnavIndex] = useState(0);
+  const [users, setUsers] = useState();
   const dispatch = useBearDispatch();
   const { isLogin } = useBearSelector((state) => ({
     isLogin: state.login.isLogin,
   }));
+  const socket = useContext(SocketContext);
+
   function showItem(item: any, index: number) {
     return (
       <a
@@ -42,6 +46,14 @@ const AppHeader: React.FC<IProps> = () => {
   function handleExit() {
     dispatch(exitLogin());
   }
+  useEffect(() => {
+    if(socket){
+      (socket as any).on("newUserResponse", (data: any) => {
+        console.log(data);
+        setUsers(data);
+      });
+    }
+  }, [socket, users]);
   return (
     <HeaderWrapper>
       <div className="content wrap-v1">
