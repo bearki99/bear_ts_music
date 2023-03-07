@@ -1,5 +1,5 @@
 import { useSelector, TypedUseSelectorHook, useDispatch } from "react-redux";
-import { combineReducers, configureStore, Store } from "@reduxjs/toolkit";
+import { combineReducers, configureStore} from "@reduxjs/toolkit";
 import thunk from "redux-thunk";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
