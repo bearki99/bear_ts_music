@@ -11,6 +11,7 @@ import { useBearDispatch, useBearSelector } from '@/store';
 
 import { exitLogin } from '../login/store';
 import { SocketContext } from '@/App';
+import { changeActiveUsers } from '@/store/modules/counter';
 interface IProps {
   children?: ReactNode;
 }
@@ -18,11 +19,7 @@ interface IProps {
 const AppHeader: React.FC<IProps> = () => {
   const [titleindex, setIndex] = useState(0);
   const [subnavIndex, setnavIndex] = useState(0);
-  const [users, setUsers] = useState();
   const dispatch = useBearDispatch();
-  const { isLogin } = useBearSelector((state) => ({
-    isLogin: state.login.isLogin,
-  }));
   const socket = useContext(SocketContext);
 
   function showItem(item: any, index: number) {
@@ -49,11 +46,10 @@ const AppHeader: React.FC<IProps> = () => {
   useEffect(() => {
     if(socket){
       (socket as any).on("newUserResponse", (data: any) => {
-        console.log(data);
-        setUsers(data);
+        dispatch(changeActiveUsers(data));
       });
     }
-  }, [socket, users]);
+  }, [socket]);
   return (
     <HeaderWrapper>
       <div className="content wrap-v1">
