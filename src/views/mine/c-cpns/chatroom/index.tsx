@@ -11,6 +11,7 @@ import PersonItem from "../person-item/index";
 import Emoji from "../emoji";
 
 import Dexie from "dexie";
+import { useBearSelector } from "@/store";
 
 interface IMessage {
   id: string;
@@ -20,6 +21,8 @@ interface IMessage {
   time: string;
   type: number;
   realTime: number;
+  sender: string;
+  render: string;
 }
 
 class ChatDatabase extends Dexie {
@@ -28,7 +31,8 @@ class ChatDatabase extends Dexie {
   constructor() {
     super("ChatDatabase");
     this.version(1).stores({
-      messages: "id, text, name, socketID, time, type, realTime",
+      messages:
+        "id, text, name, socketID, time, type, realTime, sender, render",
     });
     this.messages = this.table("messages");
   }
@@ -52,9 +56,12 @@ const ChatRoom: React.FC<IProps> = (props) => {
   const [messages, setMessages] = useState<IMessage[]>([]);
 
   const ref = useRef<ElementRef<typeof Input>>(null);
-
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
+  const from = localStorage.getItem("username") as string;
+  const { to } = useBearSelector((state) => ({
+    to: state.counter.to,
+  }));
   const smoothScrollToBottom = () => {
     const chatContainer = chatContainerRef.current;
     if (chatContainer) {
@@ -89,16 +96,32 @@ const ChatRoom: React.FC<IProps> = (props) => {
   useEffect(() => {
     // 加载现有的聊天消息
     db.messages
+      // .where("[sender+receiver]")
+      // .equals([from, to])
+      // .or("[sender+receiver]")
+      // .equals([to, from])
       // .orderBy("realTime")
       .toArray()
       .then((msgs) => {
         msgs.sort((a, b) => a.realTime - b.realTime);
-        setMessages(msgs);
+        const newData = msgs.filter(
+          (item: IMessage) =>
+            (item.sender === from && item.render === to) ||
+            (item.sender === to && item.render === from)
+        );
+        setMessages(newData);
+        smoothScrollToBottom();
       });
-  }, []);
+  }, [to]);
   useEffect(() => {
-    socket.on("messageResponse", (data: any) => {
-      setMessages([...messages, data]);
+    socket.on("messageResponse", (data: IMessage) => {
+      if (
+        (data.sender === from && data.render === to) ||
+        (data.sender === to && data.render === from)
+      ) {
+        setMessages([...messages, data]);
+      }
+
       db.messages.add(data);
     });
     smoothScrollToBottom();
@@ -116,7 +139,9 @@ const ChatRoom: React.FC<IProps> = (props) => {
         socketID: socket.id,
         time: new Date().toLocaleString(),
         realTime: +new Date(),
-        type: 0, //把0设置为文本
+        type: 0, //把0设置为文本,
+        sender: localStorage.getItem("username"),
+        render: to,
       });
       setInputVal("");
     }
@@ -128,15 +153,17 @@ const ChatRoom: React.FC<IProps> = (props) => {
     });
   };
   const handleEmoji = (item: string) => {
-    console.log(item);
     setShowEmoji(false);
     socket.emit("message", {
       text: item,
       name: localStorage.getItem("username"),
       id: `${socket.id}${Math.random()}`,
       socketID: socket.id,
+      realTime: +new Date(),
       time: new Date().toLocaleString(),
-      type: 1, //把1设置为Emoji，2为文件，3为图片
+      type: 1, //把1设置为Emoji，2为文件，3为图片,
+      sender: localStorage.getItem("username"),
+      render: to,
     });
   };
   return (
@@ -159,15 +186,11 @@ const ChatRoom: React.FC<IProps> = (props) => {
             {messages &&
               messages.map((item: any) => {
                 return (
-                  <>
-                    {
-                      <PersonItem
-                        key={+item.time}
-                        infoData={item}
-                        type={item.type}
-                      />
-                    }
-                  </>
+                  <PersonItem
+                    key={item.realTime}
+                    infoData={item}
+                    type={item.type}
+                  />
                 );
               })}
           </div>

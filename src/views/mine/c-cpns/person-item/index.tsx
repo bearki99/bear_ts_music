@@ -5,6 +5,8 @@ import classNames from "classnames";
 import { UserOutlined } from "@ant-design/icons";
 
 import { PersonItemWrapper } from "./style";
+import { useBearDispatch } from "@/store";
+import { changeToAction } from "@/store/modules/counter";
 interface IProps {
   children?: ReactNode;
   infoData?: any;
@@ -15,6 +17,7 @@ const PersonItem: React.FC<IProps> = (props) => {
   const { infoData, type } = props;
   const { text, name, time } = infoData;
   const loginName = localStorage.getItem("username");
+  const dispatch = useBearDispatch();
   return (
     <PersonItemWrapper className="clearfix">
       <div
@@ -25,7 +28,11 @@ const PersonItem: React.FC<IProps> = (props) => {
       >
         <div className="top clearfix">
           {type === 0 && <div className="des">{text}</div>}
-          {type === 1 && <img src={text}></img>}
+          {type === 1 && (
+            <div className="my-img">
+              <img src={text}></img>
+            </div>
+          )}
         </div>
 
         <div className="main-detail">

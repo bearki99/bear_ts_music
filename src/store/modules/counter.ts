@@ -4,12 +4,14 @@ interface IState {
   activeUser: any[];
   subIndex: number;
   firstIndex: number;
+  to: string;
 }
 const initialState: IState = {
   count: 99,
   activeUser: [],
   firstIndex: 0,
   subIndex: 0,
+  to: "",
 };
 const counterSlice = createSlice({
   name: "counter",
@@ -27,6 +29,9 @@ const counterSlice = createSlice({
     changeFirstIndex(state, { payload }) {
       state.firstIndex = payload;
     },
+    changeToAction(state, {payload}){
+      state.to = payload;
+    }
   },
 });
 export const {
@@ -34,5 +39,6 @@ export const {
   changeActiveUsers,
   changeSubIndex,
   changeFirstIndex,
+  changeToAction
 } = counterSlice.actions;
 export default counterSlice.reducer;

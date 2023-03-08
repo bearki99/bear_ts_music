@@ -46,8 +46,14 @@ export const PersonItemWrapper = styled.div`
     }
   }
   .top {
+    position: relative;
+    .my-img {
+      display: flex;
+      text-align: center;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
     img {
-      float: right;
       width: 100px;
       height: 100px;
       margin-bottom: 5px;

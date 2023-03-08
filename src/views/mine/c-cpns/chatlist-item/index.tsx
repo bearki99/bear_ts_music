@@ -3,6 +3,8 @@ import { memo } from "react";
 import { ChatItemWrapper } from "./style";
 import Pic from "@/assets/img/head_portrait.jpg";
 import classNames from "classnames";
+import { useBearDispatch } from "@/store";
+import { changeToAction } from "@/store/modules/counter";
 interface IProps {
   children?: ReactNode;
   infoData?: any;
@@ -14,8 +16,10 @@ interface IProps {
 const ChatItem: React.FC<IProps> = (props) => {
   const {activeUser, infoData, handleMyClick, nowUser} = props;
   const {name, des} = infoData;
+  const dispatch = useBearDispatch();
   const handleClick = function(name: string){
     handleMyClick(name);
+    dispatch(changeToAction(name));
   }
   const newActiveUser = activeUser.map((item)=>item.username);
 
