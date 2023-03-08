@@ -19,6 +19,14 @@ import { getMyLoginData } from "./components/login/store";
 
 import socketIO from "socket.io-client";
 
+import Dexie from 'dexie';
+
+const db = new Dexie('ChatDatabase');
+
+db.version(1).stores({
+  messages: '++id, sender, message, timestamp'
+});
+
 export const SocketContext = createContext(null);
 export const UserContext = createContext(null);
 function App() {

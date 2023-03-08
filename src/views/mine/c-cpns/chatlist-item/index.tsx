@@ -6,7 +6,7 @@ import classNames from "classnames";
 interface IProps {
   children?: ReactNode;
   infoData?: any;
-  activeUser: string[];
+  activeUser: any[];
   handleMyClick?: any;
   nowUser?: string;
 }
@@ -17,7 +17,9 @@ const ChatItem: React.FC<IProps> = (props) => {
   const handleClick = function(name: string){
     handleMyClick(name);
   }
-  const isActive = activeUser.indexOf(name) !== -1;
+  const newActiveUser = activeUser.map((item)=>item.username);
+
+  const isActive = newActiveUser.indexOf(name) !== -1;
   return (
     <ChatItemWrapper isActive={isActive}>
       <div

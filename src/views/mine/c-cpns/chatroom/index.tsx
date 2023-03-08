@@ -3,12 +3,38 @@ import { memo } from "react";
 import { ChatRoomWrapper } from "./style";
 import { Input, Button } from "antd";
 import { message } from "antd";
-import { Dropdown } from 'antd';
-import type { MenuProps } from 'antd';
+import { Dropdown } from "antd";
+import type { MenuProps } from "antd";
 
 import { ElementRef } from "react";
 import PersonItem from "../person-item/index";
 import Emoji from "../emoji";
+
+import Dexie from "dexie";
+
+interface IMessage {
+  id: string;
+  text: string;
+  name: string;
+  socketID: string;
+  time: string;
+  type: number;
+  realTime: number;
+}
+
+class ChatDatabase extends Dexie {
+  messages: Dexie.Table<IMessage, string>;
+
+  constructor() {
+    super("ChatDatabase");
+    this.version(1).stores({
+      messages: "id, text, name, socketID, time, type, realTime",
+    });
+    this.messages = this.table("messages");
+  }
+}
+
+const db = new ChatDatabase();
 
 interface IProps {
   children?: ReactNode;
@@ -22,8 +48,8 @@ const ChatRoom: React.FC<IProps> = (props) => {
   const [messageApi, contextHolder] = message.useMessage();
 
   const [inputVal, setInputVal] = useState("");
-  const [showEmoji, setShowEmoji] = useState(false);  
-  const [messages, setMessages] = useState<any>([]);
+  const [showEmoji, setShowEmoji] = useState(false);
+  const [messages, setMessages] = useState<IMessage[]>([]);
 
   const ref = useRef<ElementRef<typeof Input>>(null);
 
@@ -39,9 +65,7 @@ const ChatRoom: React.FC<IProps> = (props) => {
       const endScrollTop = chatContentHeight - chatContainer.clientHeight;
 
       const easeInOutCubic = (t: number) =>
-        t < 0.5
-          ? 4 * t * t * t
-          : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
+        t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
 
       const animateScroll = (timestamp: number) => {
         if (!startTime) {
@@ -49,7 +73,8 @@ const ChatRoom: React.FC<IProps> = (props) => {
         }
         const elapsedTime = timestamp - startTime;
         const progress = easeInOutCubic(elapsedTime / scrollDuration);
-        const newScrollTop = startScrollTop + progress * (endScrollTop - startScrollTop);
+        const newScrollTop =
+          startScrollTop + progress * (endScrollTop - startScrollTop);
         chatContainer.scrollTo({ top: newScrollTop, behavior: "auto" });
         if (elapsedTime < scrollDuration) {
           requestAnimationFrame(animateScroll);
@@ -62,9 +87,20 @@ const ChatRoom: React.FC<IProps> = (props) => {
     }
   };
   useEffect(() => {
-    socket.on("messageResponse", (data: any) =>
-      setMessages([...messages, data])
-    );
+    // 加载现有的聊天消息
+    db.messages
+      // .orderBy("realTime")
+      .toArray()
+      .then((msgs) => {
+        msgs.sort((a, b) => a.realTime - b.realTime);
+        setMessages(msgs);
+      });
+  }, []);
+  useEffect(() => {
+    socket.on("messageResponse", (data: any) => {
+      setMessages([...messages, data]);
+      db.messages.add(data);
+    });
     smoothScrollToBottom();
   }, [socket, messages]);
 
@@ -79,6 +115,8 @@ const ChatRoom: React.FC<IProps> = (props) => {
         id: `${socket.id}${Math.random()}`,
         socketID: socket.id,
         time: new Date().toLocaleString(),
+        realTime: +new Date(),
+        type: 0, //把0设置为文本
       });
       setInputVal("");
     }
@@ -90,56 +128,88 @@ const ChatRoom: React.FC<IProps> = (props) => {
     });
   };
   const handleEmoji = (item: string) => {
+    console.log(item);
     setShowEmoji(false);
-  }
+    socket.emit("message", {
+      text: item,
+      name: localStorage.getItem("username"),
+      id: `${socket.id}${Math.random()}`,
+      socketID: socket.id,
+      time: new Date().toLocaleString(),
+      type: 1, //把1设置为Emoji，2为文件，3为图片
+    });
+  };
   return (
     <ChatRoomWrapper>
-      { selectUser=='' && <div>欢迎来到聊天室</div>}
-      { selectUser !== "" && <>
-      <div className="header">
-        <div className="left">
-          <div className="icon">
-            <img src={require(`@/assets/img/head_portrait_${selectUser}.jpg`)} alt="" />
-            <span>{selectUser}</span>
+      {selectUser == "" && <div>欢迎来到聊天室</div>}
+      {selectUser !== "" && (
+        <>
+          <div className="header">
+            <div className="left">
+              <div className="icon">
+                <img
+                  src={require(`@/assets/img/head_portrait_${selectUser}.jpg`)}
+                  alt=""
+                />
+                <span>{selectUser}</span>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-      <div className="main-content" ref={chatContainerRef}>
-        {messages &&
-          messages.map((item: any) => {
-            return <PersonItem key={item.time} infoData={item} />;
-          })}
-      </div>
-      <div className="footer">
-        <Input.Group  size="large" className="input-group">
-        
-        {/* emoji表情 */}
-        <Dropdown placement="topLeft" 
-        trigger={['click']} 
-        open={showEmoji}
-        onOpenChange={setShowEmoji}
-        dropdownRender={()=><Emoji handleEmoji={handleEmoji}/>} 
-        arrow={{ pointAtCenter: true }}>
-          <Button className="my-btn1">
-            <img src={require("@/assets/img/emoji/smiling-face.png")} alt="" />
-          </Button>
-        </Dropdown>
-          <Input
-            style={{ width: "calc(100% - 200px)" }}
-            placeholder="请输入聊天内容"
-            onPressEnter={handleSubmit}
-            onChange={(e) => setInputVal(e.target.value)}
-            value={inputVal}
-            ref={ref}
-            className="my-input"
-          />
-          <Button type="primary" size="large" onClick={handleSubmit} className="mybtn">
-            发送
-          </Button>
-        </Input.Group>
-      </div>
-      </>}
-      
+          <div className="main-content" ref={chatContainerRef}>
+            {messages &&
+              messages.map((item: any) => {
+                return (
+                  <>
+                    {
+                      <PersonItem
+                        key={+item.time}
+                        infoData={item}
+                        type={item.type}
+                      />
+                    }
+                  </>
+                );
+              })}
+          </div>
+          <div className="footer">
+            <Input.Group size="large" className="input-group">
+              {/* emoji表情 */}
+              <Dropdown
+                placement="topLeft"
+                trigger={["click"]}
+                open={showEmoji}
+                onOpenChange={setShowEmoji}
+                dropdownRender={() => <Emoji handleEmoji={handleEmoji} />}
+                arrow={{ pointAtCenter: true }}
+              >
+                <Button className="my-btn1">
+                  <img
+                    src={require("@/assets/img/emoji/smiling-face.png")}
+                    alt=""
+                  />
+                </Button>
+              </Dropdown>
+              <Input
+                style={{ width: "calc(100% - 200px)" }}
+                placeholder="请输入聊天内容"
+                onPressEnter={handleSubmit}
+                onChange={(e) => setInputVal(e.target.value)}
+                value={inputVal}
+                ref={ref}
+                className="my-input"
+              />
+              <Button
+                type="primary"
+                size="large"
+                onClick={handleSubmit}
+                className="mybtn"
+              >
+                发送
+              </Button>
+            </Input.Group>
+          </div>
+        </>
+      )}
     </ChatRoomWrapper>
   );
 };

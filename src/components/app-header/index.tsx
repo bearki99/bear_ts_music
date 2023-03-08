@@ -1,4 +1,4 @@
-import React, { ReactNode, useContext, useState, useEffect } from "react";
+import React, { ReactNode, useContext, useEffect } from "react";
 import { memo } from "react";
 import { HeaderLeft, HeaderRight, HeaderWrapper } from "./style";
 

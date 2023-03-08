@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const PersonItemWrapper = styled.div`
-  padding: 10px 0;
+  padding: 20px 0;
   width: 100%;
   .left-content {
     float: left;
@@ -40,8 +40,17 @@ export const PersonItemWrapper = styled.div`
     .name {
       margin: 0 5px;
     }
-    .name, .time {
+    .name,
+    .time {
       color: white;
+    }
+  }
+  .top {
+    img {
+      float: right;
+      width: 100px;
+      height: 100px;
+      margin-bottom: 5px;
     }
   }
   .clearfix::after {

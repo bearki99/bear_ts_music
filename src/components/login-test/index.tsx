@@ -47,7 +47,7 @@ const InputLogin: React.FC<IProps> = () => {
         setAccessToken(token);
         setRefreshToken(refreshToken);
         localStorage.setItem("username", username);
-        socket.emit('newUser', { username, socketID: socket.id });
+        // socket.emit('newUser', { username, socketID: socket.id });
       })
       .catch((err) => console.log(err));
       message.success("成功", 3, () => {
