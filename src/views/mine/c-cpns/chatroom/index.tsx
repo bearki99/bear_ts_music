@@ -4,7 +4,7 @@ import { ChatRoomWrapper } from "./style";
 import { Input, Button } from "antd";
 import { message } from "antd";
 import { Dropdown } from "antd";
-import type { MenuProps } from "antd";
+import { CopyOutlined } from "@ant-design/icons";
 
 import { ElementRef } from "react";
 import PersonItem from "../person-item/index";
@@ -12,6 +12,8 @@ import Emoji from "../emoji";
 
 import Dexie from "dexie";
 import { useBearSelector } from "@/store";
+
+import SparkMD5 from "spark-md5";
 
 interface IMessage {
   id: string;
@@ -46,7 +48,10 @@ interface IProps {
   socket?: any;
   selectUser?: string;
 }
-
+interface Chunk {
+  md5: string;
+  chunk: Blob;
+}
 const ChatRoom: React.FC<IProps> = (props) => {
   const { socket, selectUser } = props;
   const [messageApi, contextHolder] = message.useMessage();
@@ -56,6 +61,7 @@ const ChatRoom: React.FC<IProps> = (props) => {
   const [messages, setMessages] = useState<IMessage[]>([]);
 
   const ref = useRef<ElementRef<typeof Input>>(null);
+  const myRef = useRef<HTMLInputElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
   const from = localStorage.getItem("username") as string;
@@ -92,6 +98,9 @@ const ChatRoom: React.FC<IProps> = (props) => {
 
       requestAnimationFrame(animateScroll);
     }
+  };
+  const handleTransmit = () => {
+    myRef.current?.click();
   };
   useEffect(() => {
     // 加载现有的聊天消息
@@ -166,6 +175,117 @@ const ChatRoom: React.FC<IProps> = (props) => {
       render: to,
     });
   };
+  const handleUpload = async (file: any) => {
+    // 获取上传的文件
+    // const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const CHUNK_SIZE = 2 * 1024 * 1024;
+    const selectedFile = file.target.files[0];
+    // setSelectedFile(currentFile);
+    const fileReader = new FileReader();
+    const fileChunkList: Chunk[] = [];
+
+    let cursor = 0;
+
+    // 加密，计算文件的md5值
+    const calculateMD5 = () => {
+      return new Promise<string>((resolve, reject) => {
+        fileReader.onload = (event) => {
+          const spark = new SparkMD5.ArrayBuffer();
+          spark.append(event.target?.result as ArrayBuffer);
+          const md5 = spark.end();
+          resolve(md5);
+        };
+        fileReader.onerror = () => {
+          reject("Failed to calculate MD5");
+        };
+        fileReader.readAsArrayBuffer(
+          (selectedFile as File).slice(0, CHUNK_SIZE)
+        );
+      });
+    };
+
+    // 文件切片
+    const sliceFile = (md5: string) => {
+      return new Promise<void>((resolve, reject) => {
+        while (cursor < (selectedFile as File).size) {
+          const chunkSize = Math.min(
+            CHUNK_SIZE,
+            (selectedFile as File).size - cursor
+          );
+          const chunk = (selectedFile as File).slice(
+            cursor,
+            cursor + chunkSize
+          );
+          fileChunkList.push({ md5, chunk });
+          cursor += chunkSize;
+        }
+        resolve();
+      });
+    };
+
+    const checkFileExists = async (md5: string) => {
+      const response = await fetch(
+        `http://localhost:4000/checkFile?md5=${md5}`
+      );
+      const { fileExists, uploadedChunks } = await response.json();
+
+      if (fileExists) {
+        console.log(
+          "File already exists on the server, starting upload of remaining chunks"
+        );
+        return uploadedChunks;
+      } else {
+        return null;
+      }
+    };
+
+    const uploadChunks = async (uploadedChunks: number[] | null) => {
+      try {
+        for (let i = 0; i < fileChunkList.length; i++) {
+          if (uploadedChunks?.includes(i)) {
+            console.log(`Chunk ${i} already uploaded, skipping`);
+            continue;
+          }
+
+          const formData = new FormData();
+          formData.append("file", fileChunkList[i].chunk);
+          formData.append("index", i.toString());
+          formData.append("total", fileChunkList.length.toString());
+          formData.append("md5", fileChunkList[i].md5);
+
+          await fetch("http://localhost:4000/upload", {
+            method: "POST",
+            body: formData,
+            // onUploadProgress: (progressEvent) => {
+            //   const percentCompleted = Math.round(
+            //     ((i * CHUNK_SIZE + progressEvent.loaded) * 100) /
+            //       (selectedFile as File).size
+            //   );
+            // setProgress(percentCompleted);
+            // },
+          });
+        }
+        console.log("All chunks uploaded successfully");
+      } catch (error) {
+        console.error("Failed to upload chunks:", error);
+      }
+    };
+    try {
+      const md5 = await calculateMD5();
+      console.log(`File MD5: ${md5}`);
+      const uploadedChunks = await checkFileExists(md5);
+
+      if (uploadedChunks) {
+        await uploadChunks(uploadedChunks);
+      } else {
+        await sliceFile(md5);
+        await uploadChunks(null);
+      }
+      // setProgress(100);
+    } catch (error) {
+      console.error("Failed to upload file:", error);
+    }
+  };
   return (
     <ChatRoomWrapper>
       {selectUser == "" && <div>欢迎来到聊天室</div>}
@@ -180,6 +300,20 @@ const ChatRoom: React.FC<IProps> = (props) => {
                 />
                 <span>{selectUser}</span>
               </div>
+            </div>
+            <div className="right">
+              <button className="right-btn">
+                <div className="transmit" onClick={handleTransmit}>
+                  <input
+                    type="file"
+                    multiple={true}
+                    className="input"
+                    onChange={(e) => handleUpload(e)}
+                    ref={myRef}
+                  />
+                  <CopyOutlined />
+                </div>
+              </button>
             </div>
           </div>
           <div className="main-content" ref={chatContainerRef}>
