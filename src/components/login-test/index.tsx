@@ -1,4 +1,10 @@
-import React, { ReactNode, useRef, ElementRef, useState, useContext } from "react";
+import React, {
+  ReactNode,
+  useRef,
+  ElementRef,
+  useState,
+  useContext,
+} from "react";
 import { memo } from "react";
 import { LoginInputWrapper } from "./style";
 
@@ -28,7 +34,7 @@ export function getLoginStatus(username: string, password: string) {
 }
 
 const InputLogin: React.FC<IProps> = () => {
-  const socket:any = useContext(SocketContext);
+  const socket: any = useContext(SocketContext);
   const inputRef = useRef<ElementRef<typeof Input>>(null);
   const passwordRef = useRef<ElementRef<typeof Input>>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -36,29 +42,31 @@ const InputLogin: React.FC<IProps> = () => {
     const username = inputRef.current?.input?.value as string;
     const password = passwordRef.current?.input?.value as string;
     const data = { username, password };
-    
+
     newbearRequest
       .post({
         url: "/mylogin",
         data,
       })
       .then((data) => {
-        const { token, refreshToken } = data.data;
-        setAccessToken(token);
-        setRefreshToken(refreshToken);
+        console.log(data.data.data.access_token, data.data.data.refresh_token, data.data.data)
+        if (data.data.data.access_token && data.data.data.refresh_token) {
+          setAccessToken(data.data.data.access_token);
+          setRefreshToken(data.data.data.refresh_token);
+        }
+
         localStorage.setItem("username", username);
         // socket.emit('newUser', { username, socketID: socket.id });
       })
       .catch((err) => console.log(err));
-      message.success("成功", 3, () => {
-        if (scrollRef.current) {
-          scrollRef.current.style.display = "none";
-        }
-        setTimeout(() => {
-          window.location.href = "/#";
-        }, 2000);
-      });
-    
+    message.success("成功", 3, () => {
+      if (scrollRef.current) {
+        scrollRef.current.style.display = "none";
+      }
+    });
+    setTimeout(() => {
+      window.location.href = "/#";
+    }, 2000);
   }
   function handleClick() {
     if (scrollRef.current) {

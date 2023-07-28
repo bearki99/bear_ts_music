@@ -67,7 +67,7 @@ class NewBearRequest {
         }
         removeRefreshToken();
         removeAccessToken();
-        window.location.reload();
+        // window.location.reload();
         return Promise.reject(err);
       },
     );

@@ -36,7 +36,7 @@ const Recommend: React.FC<IProps> = () => {
     if (localStorage.getItem('ACCESS-TOKEN') || localStorage.getItem('REFRESH-TOKEN')) {
       newbearRequest
         .get({
-          url: '/protected',
+          url: '/afterlogin',
         })
     }
     setShow(true);

@@ -7,14 +7,10 @@ export const ChatRoomWrapper = styled.div`
   height: 73vh;
   box-sizing: border-box;
   margin-left: 20px;
-  .input {
-    display: none;
-  }
   .header {
     height: 80px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
     padding: 0 10px;
     .left {
       display: flex;
@@ -102,13 +98,5 @@ export const ChatRoomWrapper = styled.div`
       width: 30px;
       height: 30px;
     }
-  }
-  .right {
-    margin-right: 70px;
-  }
-  .right-btn {
-    width: 20px;
-    height: 50px;
-    background: transparent;
   }
 `;
